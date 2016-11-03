@@ -1,0 +1,4 @@
+Make all enemies 10 steps or closer on the heatmap take an action
+Begin designing the Combatant class (!)
+Implement field of view (minimum complexity possible).
+Tell all things about their maps
