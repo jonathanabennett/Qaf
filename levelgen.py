@@ -4,6 +4,7 @@ import logging
 from math import floor
 import beastiary
 from fighter import Fighter
+from player import Player
 
 logging.basicConfig(filename="example.log", level=logging.DEBUG)
 
@@ -25,14 +26,15 @@ class Rect():
             self.y1 <= other.y2 and self.y2 >= other.y1)
     
 class MapGenerator:
-  def __init__(self, maxX, maxY, things, player, max_residents=3):
+  def __init__(self, maxX, maxY, things, player,max_residents=3):
     self.maxX = maxX
     self.maxY = maxY
     self.max_residents = max_residents
     self.map = Map(maxX, maxY)
     logging.info("maxX, maxY = %s, %s" % (str(maxX), str(maxY)))
-    self.things = things
     self.player = player
+    self.player.level = self.map
+    self.things = things
     self.create_map(6, 10, 30)
 
   def create_room(self,room):
@@ -55,9 +57,11 @@ class MapGenerator:
       y = randint(room.y1+1, room.y2-1)
       
       if randint(0, 100) < 80:
-        monster = beastiary.Monster(x, y,'o','orc','Orc','An Angry Orc',fighter_comp=Fighter(10,1))
+        monster = beastiary.Monster(x, y,'o','orc','Orc','An Angry Orc',
+                                    level=self.map,fighter_comp=Fighter(10,1))
       else:
-        monster = beastiary.Monster(x,y,'T','troll','Troll','An Ugly Troll',fighter_comp=Fighter(30,2))
+        monster = beastiary.Monster(x,y,'T','troll','Troll','An Ugly Troll',
+                                    level = self.map,fighter_comp=Fighter(30,2))
       self.things.append(monster)
       
   
@@ -69,11 +73,6 @@ class MapGenerator:
       x = randint(0, self.maxX - w - 1)
       y = randint(0, self.maxY - h - 1)
       new_room = Rect(x, y, w, h)
-      logging.info("Room #%s" % str(r))
-#      logging.info("x1 = %s" % str(x))
-#      logging.info("y1 = %s" % str(y))
-#      logging.info("x2 = %s" % str(x+w))
-#      logging.info("y2 = %s" % str(y+h))
       
       failed = False
       if not failed:
@@ -87,9 +86,8 @@ class MapGenerator:
         new_x, new_y = new_room.center()
         
         if len(rooms) == 0:
-          self.player.x = int(floor(new_x))
-          self.player.y = int(floor(new_y))
-          
+          self.player.x = floor(new_x)
+          self.player.y = floor(new_y)
         else:
           prev_x, prev_y = rooms[len(rooms)-1].center()
           self.place_things(new_room)

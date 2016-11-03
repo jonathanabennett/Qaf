@@ -22,14 +22,13 @@ class Game():
         self.map_view = self.main.subwin(self.height-10,self.width-20,0,20)
         self.messages_view = self.main.subwin(self.height-10, 0)
         self.char_sheet = self.main.subwin(self.height-10, 20,0,0)
+        self.player = Player(0,0,None)
         self.things = []
-        self.player = (Player(int(floor(self.height/2)), #See player.py for
-                                  int(floor(self.width/2)))) #class description
         self.map_height = 100
         self.map_width = 100
         if self.map_height < self.height-10: self.map_height = self.height-10
         if self.map_width < self.width-20: self.map_width = self.width - 20
-        self.map = MapGenerator(self.map_width,self.map_height, self.things, self.player).map
+        self.map = MapGenerator(self.map_width,self.map_height, self.things,self.player).map
         self.game_state = "playing"
         self.took_turn = False
         self.messages = []

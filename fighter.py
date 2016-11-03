@@ -4,8 +4,8 @@ from math import floor
 class Fighter():
     """Component required by all things which can take and cause damage."""
 
-    def __init__(self,owner,hp,atk):
-        self.owner = owner
+    def __init__(self,hp,atk):
+        self.owner = None
         self.hp = hp
         self.current_hp = hp
         self.atk = atk
