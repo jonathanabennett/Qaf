@@ -28,7 +28,10 @@ CP: Instead of descrete CP, I want skills to slowly accure up to their next leve
 Magic: How to handle this? This will be an important sticking point. Research G:Magic, G:Magic Styles, and G:T for ideas
 
 Advantages: Modified GURPS style? Needs serious design work."""
- import attr
+import attr
+import logging
+
+log = logging.getLogger(__name__)
 
 @attr.s
 class Fighter():

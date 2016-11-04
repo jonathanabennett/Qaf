@@ -1,4 +1,7 @@
 from fighter import Fighter
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class Monster():

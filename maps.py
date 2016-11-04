@@ -2,6 +2,9 @@ import sys
 import uuid
 from time import process_time
 import heapq
+import logging
+
+log = logging.getLogger(__name__)
 
 class Tile:
     

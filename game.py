@@ -6,7 +6,8 @@ from maps import Map
 from levelgen import MapGenerator
 import logging
 
-logging.basicConfig(filename="game.log", level=logging.DEBUG)
+logging.basicConfig(filename="Qaf.log")
+log = logging.getLogger(__name__)
 directions = {"N":(-1,0), "S":(1,0), "E":(0,1), "W":(0,-1),
              "NW":(-1,-1), "NE":(-1,1), "SW":(1,-1), "SE":(1,1)}
 
@@ -70,13 +71,13 @@ class Game():
 
     def handle_messages(self):
         if self.new_messages:
-            logging.info(self.new_messages)
+            log.info(self.new_messages)
             self.new_messages.sort()
             disp = []
             old_msg = self.new_messages[0]
             msg_count = 0
             for message in self.new_messages:
-                logging.info(message)
+                log.info(message)
                 if message == old_msg:
                     msg_count += 1
                 else:
@@ -87,7 +88,7 @@ class Game():
                     msg_count = 1
             disp.insert(0,old_msg)
             if len(disp) < self.messages_view.getmaxyx()[0]:
-                logging.info(disp)
+                log.info(disp)
                 for line, message in enumerate(disp):
                     self.messages_view.addstr(line,1,message)
             if len(disp) > self.messages_view.getmaxyx()[0]:
@@ -111,7 +112,7 @@ class Game():
                 for thing in self.things:
                     if self.map.lookup(thing.x,thing.y).value < 10:
                         msg = thing.take_turn()
-                        logging.info(msg)
+                        log.info(msg)
                         if msg: self.new_messages.append(msg)
   
     def look(self):
@@ -136,10 +137,10 @@ Objects use the variable name "thing" to avoid namespace collision."""
         newx = self.player.x + directions[direction][1]
         blocked = self.is_blocked(newx,newy)
         if not blocked:
-            logging.debug("Not blocked")
+            log.debug("Not blocked")
             self.player.x = newx
             self.player.y = newy
-            logging.debug("Moved to %s,%s" % (self.player.x,self.player.y))
+            log.debug("Moved to %s,%s" % (self.player.x,self.player.y))
             self.took_turn = True
         else:
             for thing in self.things:
@@ -149,12 +150,12 @@ Objects use the variable name "thing" to avoid namespace collision."""
       
     def is_blocked(self,x,y):
         if self.map.lookup(x,y).blocked:
-            logging.info("Blocked by wall")
+            log.info("Blocked by wall")
             return True
     
         for thing in self.things:
             if thing.blocks and x == thing.x and y == thing.y:
-                logging.info("Blocked by %s" % thing.description)
+                log.info("Blocked by %s" % thing.description)
                 return True
         return False
   
@@ -187,7 +188,7 @@ now, it just blits the tile though..."""
         if maxX-minX < self.width-20:
             if minX == 0: maxX = self.width-20
             else: minX = maxX - (self.width-20)
-        logging.info("minX = %s, maxX = %s, minY = %s, maxY = %s" % (minX, maxX, minY, maxY))
+        log.info("minX = %s, maxX = %s, minY = %s, maxY = %s" % (minX, maxX, minY, maxY))
         for y in range(minY,maxY):
             for x in range(minX,maxX):
                 wall = self.map.lookup(x,y).blocked

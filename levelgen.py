@@ -6,7 +6,7 @@ import beastiary
 from fighter import Fighter
 from player import Player
 
-logging.basicConfig(filename="example.log", level=logging.DEBUG)
+log = logging.getLogger(__name__)
 
 class Rect():
   def __init__(self,x,y,w,h):
@@ -31,7 +31,7 @@ class MapGenerator:
     self.maxY = maxY
     self.max_residents = max_residents
     self.map = Map(maxX, maxY)
-    logging.info("maxX, maxY = %s, %s" % (str(maxX), str(maxY)))
+    log.info("maxX, maxY = %s, %s" % (str(maxX), str(maxY)))
     self.player = player
     self.player.level = self.map
     self.things = things

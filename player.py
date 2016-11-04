@@ -1,5 +1,8 @@
 from beastiary import Monster
 from fighter import Fighter
+import logging
+
+log = logging.getLogger(__name__)
 directions = {"North":(-1,0), "South":(1,0), "East":(0,1), "West":(0,-1)}
 
 class Player(Monster):

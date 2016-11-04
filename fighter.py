@@ -1,5 +1,8 @@
 from random import uniform
 from math import floor
+import logging
+
+log = logging.getLogger(__name__)
 
 class Fighter():
     """Component required by all things which can take and cause damage."""
