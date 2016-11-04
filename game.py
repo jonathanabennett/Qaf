@@ -6,8 +6,9 @@ from maps import Map
 from levelgen import MapGenerator
 import logging
 
-logging.basicConfig(filename="Qaf.log")
 log = logging.getLogger(__name__)
+logging.basicConfig(filename="Qaf.log")
+
 directions = {"N":(-1,0), "S":(1,0), "E":(0,1), "W":(0,-1),
              "NW":(-1,-1), "NE":(-1,1), "SW":(1,-1), "SE":(1,1)}
 
