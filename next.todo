@@ -1,7 +1,3 @@
 Task Pile
 
 Move Things out of the Game and into the Map. All movement/display logic there too.
-Begin designing the Combatant class (!)
-Implement field of view (minimum complexity possible).
-Update beastiary to be a number of monster factory functions.
-Troubleshoot the logging

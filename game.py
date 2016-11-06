@@ -1,24 +1,27 @@
 import curses, sys
+import logging
 from math import floor
-from player import Player
+
 import beastiary
+from player import Player
 from maps import Map
 from levelgen import MapGenerator
-import logging
 
-log = logging.getLogger(__name__)
 logging.basicConfig(filename="Qaf.log")
+log = logging.getLogger(__name__)
 
 directions = {"N":(-1,0), "S":(1,0), "E":(0,1), "W":(0,-1),
              "NW":(-1,-1), "NE":(-1,1), "SW":(1,-1), "SE":(1,1)}
 
 class Game():
+    """This is the master Object, coordinating everything. It is also what gets
+    saved when we go to save the file."""
     def __init__(self, screen):
         self.main = screen
         curses.curs_set(0)
         self.main.scrollok(0)
         self.colorize()
-        self.height, self.width = self.main.getmaxyx() #Gets screensize. Split this into its own function called on screen resize
+        self.height, self.width = self.main.getmaxyx() 
         logging.debug(self.height)
         self.main.border(0)
         self.map_view = self.main.subwin(self.height-10,self.width-20,0,20)
@@ -35,7 +38,7 @@ class Game():
         self.took_turn = False
         self.messages = []
         self.new_messages = ["Welcome to Qaf.",]
-        self.keybindings = {ord("k"): {"function":self.player_move_attack, 
+        self.keybindings = {ord("k"): {"function":self.player_move_attack,
                                        "args":{"direction":"N"}},
                             ord('j'): {"function":self.player_move_attack,
                                        "args":{"direction":"S"}},
@@ -54,7 +57,7 @@ class Game():
                             ord('q'): {"function":self.save_game,
                                        "args":{"placeholder":0}}}
         self.main_loop()
-    
+
     def colorize(self):
         curses.use_default_colors()
         curses.init_pair(1, 191, -1)
@@ -115,23 +118,23 @@ class Game():
                         msg = thing.take_turn()
                         log.info(msg)
                         if msg: self.new_messages.append(msg)
-  
+
     def look(self):
-        """I want look to define a 'cursor' Thing. This thing will be added 
-to the render list. While it is in the list, it takes precidence over player
-movements and gets to ignore calls to is_blocked when moving. Pressing 
-'Enter' will cause the cursor to see what other objects have the same x and y
-coordinates and print them at the bottom of the screen. Then it will remove
-itself from the things list. """
+        """I want look to define a 'cursor' Thing. This thing will be added
+        to the render list. While it is in the list, it takes precidence over player
+        movements and gets to ignore calls to is_blocked when moving. Pressing
+        'Enter' will cause the cursor to see what other objects have the same x and y
+        coordinates and print them at the bottom of the screen. Then it will remove
+        itself from the things list. """
         cursor = Thing(self.player.x,self.player.y, "X")
         self.things.insert(0, cursor)
-    
-    def player_move_attack(self, direction): 
+
+    def player_move_attack(self, direction):
         """I chose to let the Game class handle redraws instead of objects.
-I did this because it will make it easier should I ever attempt to rewrite
-this with libtcod, pygcurses, or even some sort of browser-based thing.
-Display is cleanly separated from obects and map data.
-Objects use the variable name "thing" to avoid namespace collision."""
+        I did this because it will make it easier should I ever attempt to rewrite
+        this with libtcod, pygcurses, or even some sort of browser-based thing.
+        Display is cleanly separated from obects and map data.
+        Objects use the variable name "thing" to avoid namespace collision."""
         curx = self.player.x
         cury = self.player.y
         newy = self.player.y + directions[direction][0]
@@ -148,26 +151,26 @@ Objects use the variable name "thing" to avoid namespace collision."""
                 if newx == thing.x and newy == thing.y:
                     self.new_messages.append(thing.get_attacked(self.player))
         return True
-      
-    def is_blocked(self,x,y):
-        if self.map.lookup(x,y).blocked:
+
+    def is_blocked(self, x, y):
+        if self.map.lookup(x, y).blocked:
             log.info("Blocked by wall")
             return True
-    
+
         for thing in self.things:
             if thing.blocks and x == thing.x and y == thing.y:
                 log.info("Blocked by %s" % thing.description)
                 return True
         return False
-  
+
     def clear_thing(self, y, x, thing):
         """Broken out to handle stacks of things in one location, resurrecting
-things, and other times I don't want to just blit out the whole tile. Right
-now, it just blits the tile though..."""
+        things, and other times I don't want to just blit out the whole tile. Right
+        now, it just blits the tile though..."""
         self.map_view.addch(y, x, " ",
                             curses.color_pair(self.color_palette["dark_floor"]))
         return True
-    
+
     def render_all(self):
         self.map.heatmap(self.player.x,self.player.y,15)
         y_offset = floor((self.height-10)/2)
@@ -203,7 +206,7 @@ now, it just blits the tile though..."""
                         self.map_view.addch(y-minY, x-minX, " ",
                                             curses.color_pair(self.color_palette["dark_floor"]))
                     except curses.error: pass
-        
+
         for thing in self.things:
             if minX <= thing.x <= maxX and minY <= thing.y <= maxY:
                 self.draw_thing(thing, minX, minY)
@@ -220,18 +223,18 @@ now, it just blits the tile though..."""
         self.map_view.refresh()
         self.messages_view.refresh()
         self.char_sheet.refresh()
-  
+
     def draw_thing(self, thing, x_offset,y_offset):
         try:
           self.map_view.addch(thing.y-y_offset, thing.x-x_offset, thing.disp,
                               curses.color_pair(self.color_palette[thing.color]))
         except curses.error: pass
-    
+
     def save_game(self,placeholder):
         sys.exit()
 
 def loop(screen):
     g = Game(screen)
-  
+
 if __name__ == "__main__":
     curses.wrapper(loop) #Should I put the main loop outside the Game Object?

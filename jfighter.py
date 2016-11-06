@@ -19,22 +19,24 @@ HP: HP is an injury threshold for a Wounding system, not an count-down timer to 
 4) Implementation questions
 Damage: The wounding system needs to be designed.
 
-Skill rolls: Will I transliterate the GURPS roll-under tests or will I use a straight percentile system?
+Skill rolls: Will I transliterate the GURPS roll-under tests or will I use a straight percentile
+system?
 
 CP: Instead of descrete CP, I want skills to slowly accure up to their next level, taking longer to
-    advance for each additional level. Perhaps some sort of exponential or logarithmic curve between levels?
-    This requires some hardcore mathing.
+    advance for each additional level. Perhaps some sort of exponential or logarithmic curve between
+    level? This requires some hardcore mathing.
 
-Magic: How to handle this? This will be an important sticking point. Research G:Magic, G:Magic Styles, and G:T for ideas
+Magic: How to handle this? This will be an important sticking point. Research G:Magic, G:Magic
+    Styles, and G:T for ideas
 
 Advantages: Modified GURPS style? Needs serious design work."""
-import attr
+
 import logging
+import attr
 
 log = logging.getLogger(__name__)
 
 @attr.s
 class Fighter():
-
-        """Stats:
-ST, DX, IQ, HT, HP, Will, Per, FP, BL, BS, Skills"""
+    """Stats:
+    ST, DX, IQ, HT, HP, Will, Per, FP, BL, BS, Skills"""

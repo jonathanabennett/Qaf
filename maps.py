@@ -1,13 +1,14 @@
+"""Map and Tile Classes. This is the file where a lot of the display logic
+happens."""
 import sys
 import uuid
-from time import process_time
 import heapq
 import logging
 
 log = logging.getLogger(__name__)
 
 class Tile:
-    
+    """The Tile Class defines a square on the map."""
     def __init__(self, blocked, x, y, block_sight=None):
         self.blocked = blocked
 
@@ -23,17 +24,20 @@ class Tile:
         self.y = y
         self.previous = None
         self.visited = False
+        self.occupied = False
 
-    def unblock(self,sight=False):
+    def unblock(self, sight=False):
+        """Function for deleting walls."""
         self.blocked = False
         self.block_sight = sight
         self.disp = '.'
 
-    def block(self,sight=True):
+    def block(self, sight=True):
+        """Function for creating walls."""
         self.blocked = True
         self.block_sight = sight
         self.disp = '#'
-    
+
     def __repr__(self):
         return self.disp
 
@@ -42,37 +46,38 @@ class Tile:
             return self.ident == other.ident
         else: return False
 
-    def __ne__(self,other):
+    def __ne__(self, other):
         result = self.__eq__(other)
         return not result
 
-    def __lt__(self,other):
+    def __lt__(self, other):
         if other.__class__ is self.__class__:
             return self.value < other.value
         else:
             return NotImplemented
 
-    def __le__(self,other):
+    def __le__(self, other):
         if other.__class__ is self.__class__:
             return self.value <= other.value
         else: return NotImplemented
 
-    def __gt__(self,other):
+    def __gt__(self, other):
         if other.__class__ is self.__class__:
             return self.value > other.value
         else: return NotImplemented
 
-    def __ge__(self,other):
+    def __ge__(self, other):
         if other.__class__ is self.__class__:
             return self.value > other.value
         else: return NotImplemented
-        
+
 class Map:
     
     def __init__(self, maxx, maxy):
         self.width = maxx
         self.height = maxy
         self.grid = {}
+        self.things = []
         for x in range(self.width):
             for y in range(self.height):
                 self.grid[(x,y)] = Tile(True,x,y)
@@ -128,7 +133,7 @@ class Map:
                     heapq.heappush(l_open, (value+1, c, cell))
 
         return self.render(0,self.width, 0,self.height)
-                                
+
 
 if __name__ == "__main__":
     m = Map(40,30)

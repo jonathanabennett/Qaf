@@ -13,7 +13,7 @@ class Fighter():
         self.current_hp = hp
         self.atk = atk
 
-    def attack(self,target):
+    def attack(self,target):     
         dmg = floor(self.atk * uniform(0.5,1,5))
         return target.take_damage(self.owner,dmg)
 
