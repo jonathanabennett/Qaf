@@ -72,7 +72,7 @@ class Tile:
         else: return NotImplemented
 
 class Map:
-    
+
     def __init__(self, maxx, maxy):
         self.width = maxx
         self.height = maxy
@@ -80,7 +80,7 @@ class Map:
         self.things = []
         for x in range(self.width):
             for y in range(self.height):
-                self.grid[(x,y)] = Tile(True,x,y)
+                self.grid[(x,y)] = Tile(False,x,y)
 
     def lookup(self,x,y):
         if 0 <= x < self.width and 0 <= y < self.height:
@@ -93,7 +93,7 @@ class Map:
             for j in range(y-1,y+2):
                 ret.append((i,j))
         return ret
- 
+
     def __repr__(self):
         ret = ""
         for y in range(self.height):
@@ -102,28 +102,34 @@ class Map:
             ret += '\n'
         return ret
 
-    def render(self, minX, maxX, minY, maxY):
+    def render(self, minX, maxX, minY, maxY,heatp=False):
         ret = []
         if minX < 0: minX = 0
         if minY < 0: minY = 0
         if maxX > self.width: maxX = self.width
         if maxY > self.height: maxY = self.height
-        for y in range (minY,maxY):
-            ret.append([])
-            for x in range(minX,maxX):
-                ret[y].append(self.lookup(x,y))
+        if not heatp:
+            for y in range (minY,maxY):
+                ret.append([])
+                for x in range(minX,maxX):
+                    ret[y].append(self.lookup(x,y))
+        else:
+            for y in range(minY,maxY):
+                ret.append([])
+                for x in range(minX,maxX):
+                    ret[y].append(self.lookup(x,y).value)
         return ret
-        
-    def heatmap(self, source_x,source_y,max_dist=15):
+
+    def heatmap(self, source_x,source_y):
         for tile in self.grid.values():
             tile.value = sys.maxsize
         l_open = []
         source = self.lookup(source_x,source_y)
         if source: l_open.append((0,source,source)) #(value,cell,previous)
-        
+
         while l_open:
             value,cell,previous = heapq.heappop(l_open)
-            if cell.visited or value > max_dist: continue
+            if cell.visited: continue
             cell.visited = True
             cell.previous = previous
             cell.value = value
@@ -132,12 +138,16 @@ class Map:
                 if c and not (c.visited or c.blocked):
                     heapq.heappush(l_open, (value+1, c, cell))
 
-        return self.render(0,self.width, 0,self.height)
+        return self.render(0,self.width, 0,self.height,heatp=True)
 
 
 if __name__ == "__main__":
-    m = Map(40,30)
-    for x in range(1,7):
-        for y in range (1,10):
-            m.lookup(x,y).blocked = False
-    print(m.heatmap(6,6))
+    m = Map(10,10)
+    ret = m.heatmap(6,6)
+    pstr = ""
+    for y in range(len(ret)):
+        for x in range(len(ret[y])):
+            pstr += str(ret[y][x])
+        pstr += "\n"
+
+    print(pstr)
