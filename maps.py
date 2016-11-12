@@ -4,6 +4,8 @@ import sys
 import uuid
 import heapq
 import logging
+import beastiary
+import player
 
 log = logging.getLogger(__name__)
 
@@ -73,11 +75,15 @@ class Tile:
 
 class Map:
 
-    def __init__(self, maxx, maxy):
+    def __init__(self, maxx, maxy, grid={}, things=[]):
+        """The correct input for things is a list of tuples containing (f_time,
+        m_monster) where:
+            f_time = Float indicating the next time value the monster can act
+            m_monster = a Monster object or Player object."""
         self.width = maxx
         self.height = maxy
-        self.grid = {}
-        self.things = []
+        self.grid = grid
+        self.things = things
         for x in range(self.width):
             for y in range(self.height):
                 self.grid[(x,y)] = Tile(False,x,y)
@@ -93,6 +99,19 @@ class Map:
             for j in range(y-1,y+2):
                 ret.append((i,j))
         return ret
+
+    def next_monster(self):
+        return heapq.heappop(self.things)
+
+    def add_monster(self,time,monster):
+        self.things.append((time+monster.fighter_comp.speed, monster))
+        return len(self.things)
+
+    def blocked(self,x,y):
+        if self.lookup(x,y).blocked:
+            return self.lookup(x,y)
+        else:
+            return self.things[(x,y)]
 
     def __repr__(self):
         ret = ""
@@ -119,6 +138,23 @@ class Map:
                 for x in range(minX,maxX):
                     ret[y].append(self.lookup(x,y).value)
         return ret
+
+    def full_render(self, minX, maxX, minY, maxY, heatp=False):
+        map_ret = []
+
+        if not heatp:
+            for y in range(0, maxY-minY):
+                map_ret.append([])
+                for x in range(minX,maxX):
+                    map_ret[y].append(self.lookup(x,minY+y))
+
+        thing_ret = []
+        for thing in self.things:
+            if minX <= thing[1].x <= maxX:
+                if minY <= thing[1].y <= maxY:
+                    thing_ret.append(thing[1])
+
+        return (map_ret, thing_ret)
 
     def heatmap(self, source_x,source_y):
         for tile in self.grid.values():

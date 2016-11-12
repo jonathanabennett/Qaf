@@ -12,6 +12,7 @@ class Fighter():
         self.hp = hp
         self.current_hp = hp
         self.atk = atk
+        self.speed = 0.5
 
     def attack(self,target):     
         dmg = floor(self.atk * uniform(0.5,1,5))

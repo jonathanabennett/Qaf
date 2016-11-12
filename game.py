@@ -27,13 +27,12 @@ class Game():
         self.map_view = self.main.subwin(self.height-10,self.width-20,0,20)
         self.messages_view = self.main.subwin(self.height-10, 0)
         self.char_sheet = self.main.subwin(self.height-10, 20,0,0)
-        self.player = Player(0,0,None)
-        self.things = []
         self.map_height = 100
         self.map_width = 100
         if self.map_height < self.height-10: self.map_height = self.height-10
         if self.map_width < self.width-20: self.map_width = self.width - 20
-        self.map = MapGenerator(self.map_width,self.map_height, self.things,self.player).map
+        self.current_level = MapGenerator(self.map_width,self.map_height,).map
+        self.player = self.current_level.things[0][1]
         self.game_state = "playing"
         self.took_turn = False
         self.messages = []
@@ -104,7 +103,7 @@ class Game():
 
     def main_loop(self):
         while 1:
-            self.render_all()
+            self.draw_screen()
             self.took_turn = False
 
             c = self.main.getch()
@@ -171,58 +170,62 @@ class Game():
                             curses.color_pair(self.color_palette["dark_floor"]))
         return True
 
-    def render_all(self):
-        self.map.heatmap(self.player.x,self.player.y,15)
-        y_offset = floor((self.height-10)/2)
-        x_offset = floor((self.width-20)/2)
+    def draw_screen(self):
+        """This function will handle all screen renders. It takes a list of
+        things and a grid (with is a list of lists of tiles. It will draw them
+        all on the screen. The next step will be splitting out messaging and
+        finally Character sheet display."""
+        self.current_level.heatmap(self.player.x, self.player.y)
+        x_offset = floor((self.width - 20) / 2)
+        minX = self.player.x - x_offset
+        maxX = self.player.x + x_offset - 1
+        if minX < 0: minX = 0
+        if maxX > self.current_level.width: maxX = self.current_level.width
+        if maxX - minX < self.width - 20:
+            if minX == 0: maxX = self.width-20
+            else: minX = maxX - (self.width - 20)
 
+        y_offset = floor((self.height - 10) / 2)
         minY = self.player.y - y_offset
-        maxY = self.player.y + y_offset
+        maxY = self.player.y + y_offset - 1
         if minY < 0: minY = 0
-        if maxY > self.map.height: maxY = self.map.height
-#The following code block tests whether we're too close to an edge and corrects for it
-        if maxY-minY < self.height-10:
+        if maxY > self.current_level.height: maxY = self.current_level.height
+        if maxY - minY < self.height - 10:
             if minY == 0: maxY = self.height-10
             else: minY = maxY - (self.height-10)
 
-        minX = self.things[0].x - x_offset
-        maxX = self.things[0].x + x_offset
-        if minX < 0: minX = 0
-        if maxX > self.map.width: maxX = self.map.width
-        if maxX-minX < self.width-20:
-            if minX == 0: maxX = self.width-20
-            else: minX = maxX - (self.width-20)
-        log.info("minX = %s, maxX = %s, minY = %s, maxY = %s" % (minX, maxX, minY, maxY))
+        log.info("minX = %s, maxX = %s, minY = %s, maxY = %s" % (minX, maxX,
+                                                                 minY, maxY))
+
+        grid,things = self.current_level.full_render(minX,maxX,minY,maxY)
+
+        #This has to be replaced with references to grid
         for y in range(minY,maxY):
             for x in range(minX,maxX):
-                wall = self.map.lookup(x,y).blocked
+                wall = self.current_level.lookup(x,y).blocked
                 if wall:
                     try:
-                        self.map_view.addch(y-minY, x-minX, " ",
+                        self.map_view.addch(y-minY, x-minX," ",
                                             curses.color_pair(self.color_palette["dark_wall"]))
                     except curses.error: pass
                 else:
                     try:
-                        self.map_view.addch(y-minY, x-minX, " ",
+                        self.map_view.addch(y-minY,x-minX," ",
                                             curses.color_pair(self.color_palette["dark_floor"]))
                     except curses.error: pass
 
-        for thing in self.things:
-            if minX <= thing.x <= maxX and minY <= thing.y <= maxY:
-                self.draw_thing(thing, minX, minY)
-        self.draw_thing(self.player, minX, minY)
+        for thing in things:
+            self.draw_thing(thing,minX,minY)
+        self.draw_thing(self.player,minX,minY)
         self.messages_view.box()
         self.char_sheet.box()
-#        try:
-#            self.messages_view.addstr(1,1,"Test Message")
-#        except curses.error: pass
+
         self.handle_messages()
-        try:
-            self.char_sheet.addstr(1,1,"Character Sheet")
+        try: self.char_sheet.addstr(1,1,"Character Sheet")
         except curses.error: pass
+
         self.map_view.refresh()
         self.messages_view.refresh()
-        self.char_sheet.refresh()
 
     def draw_thing(self, thing, x_offset,y_offset):
         try:
