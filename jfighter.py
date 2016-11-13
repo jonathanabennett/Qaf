@@ -37,6 +37,31 @@ import attr
 log = logging.getLogger(__name__)
 
 @attr.s
+class Skill():
+    """Skills store advancement, handle success rolls, and track their level.
+    Every player will have a "default" skill that is used for skills they don't
+    have."""
+
+    name = attr.ib()
+    level = attr.ib()
+    points = attr.ib()
+    attributes = attr.ib()
+
+@attr.s
 class Fighter():
     """Stats:
     ST, DX, IQ, HT, HP, Will, Per, FP, BL, BS, Skills"""
+    st = attr.ib()
+    dx = attr.ib()
+    iq = attr.ib()
+    ht = attr.ib()
+    max_hp = attr.ib()
+    cur_hp = attr.ib()
+    will = attr.ib()
+    per = attr.ib()
+    max_fp = attr.ib()
+    cur_fp = attr.ib()
+    bl = attr.ib()
+    bs = attr.ib()
+    speed = attr.ib()
+    skills = attr.ib()
