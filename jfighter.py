@@ -33,6 +33,7 @@ Advantages: Modified GURPS style? Needs serious design work."""
 
 import logging
 import attr
+from random import randint, uniform
 
 log = logging.getLogger(__name__)
 
@@ -45,16 +46,32 @@ class Skill():
     name = attr.ib()
     level = attr.ib()
     points = attr.ib()
-    attributes = attr.ib()
+    attribute = attr.ib()
+    owner = attr.ib(owner)
+
+    def skill_check(self,modifiers):
+        target = (self.owner.stats[self.attribute]*5) + level + modifiers
+        roll = randint(1,100)
+        self.advance_check(target)
+        return roll < target
+
+    def advance_check(self,target):
+        if target < 0: target = 0
+        if target > 100: target = 100
+        diff_mod = (-0.52 * target**2) + (5.1 * target) + 10
+        points += (uniform(0.0,1.0) * diff_mod)
+
+    def __repr__(self):
+        return "%s (%s): %s (%04f)" % (self.name, self.attribute, self.level,
+                                       self.points)
 
 @attr.s
 class Fighter():
     """Stats:
-    ST, DX, IQ, HT, HP, Will, Per, FP, BL, BS, Skills"""
-    st = attr.ib()
-    dx = attr.ib()
-    iq = attr.ib()
-    ht = attr.ib()
+    ST, DX, IQ, HT, HP, Will, Per, FP, BL, BS, Skills
+    stats is a dictionary with 'ST', 'DX', 'IQ', and 'HT' keys each with an int
+    value."""
+    stats = attr.ib() #Dictionary with {'ST':10,'DX':10,'IQ':10,'HT':10}
     max_hp = attr.ib()
     cur_hp = attr.ib()
     will = attr.ib()
@@ -65,3 +82,7 @@ class Fighter():
     bs = attr.ib()
     speed = attr.ib()
     skills = attr.ib()
+
+    def add_skill(self, skill, base_attribute, starting_level, starting_points):
+        pass
+
