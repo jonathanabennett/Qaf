@@ -86,7 +86,7 @@ class Map:
         self.things = things
         for x in range(self.width):
             for y in range(self.height):
-                self.grid[(x,y)] = Tile(False,x,y)
+                self.grid[(x,y)] = Tile(True,x,y)
 
     def lookup(self,x,y):
         if 0 <= x < self.width and 0 <= y < self.height:

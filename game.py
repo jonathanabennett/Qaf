@@ -200,17 +200,18 @@ class Game():
         grid,things = self.current_level.full_render(minX,maxX,minY,maxY)
 
         #This has to be replaced with references to grid
-        for y in range(minY,maxY):
-            for x in range(minX,maxX):
-                wall = self.current_level.lookup(x,y).blocked
+        for y in range(len(grid)):
+            for x in range(len(grid[y])):
+                wall = grid[y][x].blocked
+                logging.info(wall)
                 if wall:
                     try:
-                        self.map_view.addch(y-minY, x-minX," ",
+                        self.map_view.addch(y, x," ",
                                             curses.color_pair(self.color_palette["dark_wall"]))
                     except curses.error: pass
                 else:
                     try:
-                        self.map_view.addch(y-minY,x-minX," ",
+                        self.map_view.addch(y,x," ",
                                             curses.color_pair(self.color_palette["dark_floor"]))
                     except curses.error: pass
 
