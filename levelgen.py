@@ -31,7 +31,8 @@ class MapGenerator:
     self.maxY = maxY
     self.max_residents = max_residents
     self.map = Map(maxX, maxY)
-    self.player = Player(0,0,None)
+    self.player = Player(0,0,self.map)
+    self.map.player = self.player
     self.map.add_monster(0.0, self.player)
     log.info("maxX, maxY = %s, %s" % (str(maxX), str(maxY)))
     self.create_map(6, 10, 30)

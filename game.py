@@ -10,8 +10,6 @@ from levelgen import MapGenerator
 logging.basicConfig(filename="Qaf.log")
 log = logging.getLogger(__name__)
 
-directions = {"N":(-1,0), "S":(1,0), "E":(0,1), "W":(0,-1),
-             "NW":(-1,-1), "NE":(-1,1), "SW":(1,-1), "SE":(1,1)}
 
 class Game():
     """This is the master Object, coordinating everything. It is also what gets
@@ -21,7 +19,7 @@ class Game():
         curses.curs_set(0)
         self.main.scrollok(0)
         self.colorize()
-        self.height, self.width = self.main.getmaxyx() 
+        self.height, self.width = self.main.getmaxyx()
         logging.debug(self.height)
         self.main.border(0)
         self.map_view = self.main.subwin(self.height-10,self.width-20,0,20)
@@ -32,27 +30,27 @@ class Game():
         if self.map_height < self.height-10: self.map_height = self.height-10
         if self.map_width < self.width-20: self.map_width = self.width - 20
         self.current_level = MapGenerator(self.map_width,self.map_height,).map
-        self.player = self.current_level.things[0][1]
+        self.player = self.current_level.player
         self.game_state = "playing"
         self.took_turn = False
         self.messages = []
         self.new_messages = ["Welcome to Qaf.",]
-        self.keybindings = {ord("k"): {"function":self.player_move_attack,
-                                       "args":{"direction":"N"}},
-                            ord('j'): {"function":self.player_move_attack,
-                                       "args":{"direction":"S"}},
-                            ord('h'): {"function":self.player_move_attack,
-                                       "args":{"direction":"W"}},
-                            ord('l'): {"function":self.player_move_attack,
-                                       "args":{"direction":"E"}},
-                            ord('y'): {"function":self.player_move_attack,
-                                       "args":{"direction":"NW"}},
-                            ord('u'): {"function":self.player_move_attack,
-                                       "args":{"direction":"NE"}},
-                            ord('b'): {"function":self.player_move_attack,
-                                       "args":{"direction":"SW"}},
-                            ord('n'): {"function":self.player_move_attack,
-                                       "args":{"direction":"SE"}},
+        self.keybindings = {ord("k"): {"function":self.player.move_or_attack,
+                                       "args":{"direction":"North"}},
+                            ord('j'): {"function":self.player.move_or_attack,
+                                       "args":{"direction":"South"}},
+                            ord('h'): {"function":self.player.move_or_attack,
+                                       "args":{"direction":"West"}},
+                            ord('l'): {"function":self.player.move_or_attack,
+                                       "args":{"direction":"East"}},
+                            ord('y'): {"function":self.player.move_or_attack,
+                                       "args":{"direction":"NorthWest"}},
+                            ord('u'): {"function":self.player.move_or_attack,
+                                       "args":{"direction":"NorthEast"}},
+                            ord('b'): {"function":self.player.move_or_attack,
+                                       "args":{"direction":"SouthWest"}},
+                            ord('n'): {"function":self.player.move_or_attack,
+                                       "args":{"direction":"SouthEast"}},
                             ord('q'): {"function":self.save_game,
                                        "args":{"placeholder":0}}}
         self.main_loop()
@@ -127,40 +125,6 @@ class Game():
         itself from the things list. """
         cursor = Thing(self.player.x,self.player.y, "X")
         self.things.insert(0, cursor)
-
-    def player_move_attack(self, direction):
-        """I chose to let the Game class handle redraws instead of objects.
-        I did this because it will make it easier should I ever attempt to rewrite
-        this with libtcod, pygcurses, or even some sort of browser-based thing.
-        Display is cleanly separated from obects and map data.
-        Objects use the variable name "thing" to avoid namespace collision."""
-        curx = self.player.x
-        cury = self.player.y
-        newy = self.player.y + directions[direction][0]
-        newx = self.player.x + directions[direction][1]
-        blocked = self.is_blocked(newx,newy)
-        if not blocked:
-            log.debug("Not blocked")
-            self.player.x = newx
-            self.player.y = newy
-            log.debug("Moved to %s,%s" % (self.player.x,self.player.y))
-            self.took_turn = True
-        else:
-            for thing in self.things:
-                if newx == thing.x and newy == thing.y:
-                    self.new_messages.append(thing.get_attacked(self.player))
-        return True
-
-    def is_blocked(self, x, y):
-        if self.map.lookup(x, y).blocked:
-            log.info("Blocked by wall")
-            return True
-
-        for thing in self.things:
-            if thing.blocks and x == thing.x and y == thing.y:
-                log.info("Blocked by %s" % thing.description)
-                return True
-        return False
 
     def clear_thing(self, y, x, thing):
         """Broken out to handle stacks of things in one location, resurrecting

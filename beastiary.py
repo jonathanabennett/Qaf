@@ -2,12 +2,13 @@ from fighter import Fighter
 import logging
 
 log = logging.getLogger(__name__)
-DIRECTIONS = {"North":(0,-1), "NorthEast": (-1,1), "East":(1,0),
+DIRECTIONS = {"North":(0,-1), "NorthEast": (1,-1), "East":(1,0),
               "SouthEast":(1,1), "South":(0,1), "SouthWest":(-1,1),
               "West":(-1,0), "NorthWest":(-1,-1)}
 
 class Monster():
-    def __init__(self,x,y,disp,color,name,description,level,blocks=True,ai_comp=None,fighter_comp=None):
+    def __init__(self,x,y,disp,color,name,description,level,blocks=True,
+                 ai_comp=None,fighter_comp=None):
         self.x = x
         self.y = y
         self.disp = disp

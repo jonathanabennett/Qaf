@@ -84,6 +84,7 @@ class Map:
         self.height = maxy
         self.grid = grid
         self.things = things
+        self.player = None
         for x in range(self.width):
             for y in range(self.height):
                 self.grid[(x,y)] = Tile(True,x,y)
@@ -111,8 +112,10 @@ class Map:
         if self.lookup(x,y).blocked:
             return self.lookup(x,y)
         else:
-            return self.things[(x,y)]
-
+            for time, thing in self.things:
+                if thing.x == x and thing.y == y:
+                    return thing
+            return False
     def __repr__(self):
         ret = ""
         for y in range(self.height):
