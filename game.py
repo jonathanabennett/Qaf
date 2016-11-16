@@ -24,6 +24,8 @@ class Game():
         self.main.border(0)
         self.map_view = self.main.subwin(self.height-10,self.width-20,0,20)
         self.messages_view = self.main.subwin(self.height-10, 0)
+        self.msg_handler = MessageWindow(window=self.message_view,
+                                         message_list=[])
         self.char_sheet = self.main.subwin(self.height-10, 20,0,0)
         self.map_height = 100
         self.map_width = 100
@@ -33,8 +35,7 @@ class Game():
         self.player = self.current_level.player
         self.game_state = "playing"
         self.took_turn = False
-        self.messages = []
-        self.new_messages = ["Welcome to Qaf.",]
+        self.msg_handler.new_message(Message(0.0,"Welcome to Qaf."))
         self.keybindings = {ord("k"): {"function":self.player.move_or_attack,
                                        "args":{"direction":"North"}},
                             ord('j'): {"function":self.player.move_or_attack,
@@ -114,7 +115,7 @@ class Game():
                     if self.map.lookup(thing.x,thing.y).value < 10:
                         msg = thing.take_turn()
                         log.info(msg)
-                        if msg: self.new_messages.append(msg)
+                        if msg: self.msg_handler.new_message(1.0, msg)
 
     def look(self):
         """I want look to define a 'cursor' Thing. This thing will be added
@@ -182,15 +183,13 @@ class Game():
         for thing in things:
             self.draw_thing(thing,minX,minY)
         self.draw_thing(self.player,minX,minY)
-        self.messages_view.box()
         self.char_sheet.box()
 
-        self.handle_messages()
+        self.msg_handler.update_messages()
         try: self.char_sheet.addstr(1,1,"Character Sheet")
         except curses.error: pass
 
         self.map_view.refresh()
-        self.messages_view.refresh()
 
     def draw_thing(self, thing, x_offset,y_offset):
         try:
