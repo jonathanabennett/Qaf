@@ -1,15 +1,14 @@
 import curses, sys
 import logging
 from math import floor
-
 import beastiary
 from player import Player
 from maps import Map
 from levelgen import MapGenerator
+from messages import MessageWindow
 
 logging.basicConfig(filename="Qaf.log")
 log = logging.getLogger(__name__)
-
 
 class Game():
     """This is the master Object, coordinating everything. It is also what gets
