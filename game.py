@@ -71,35 +71,6 @@ class Game():
         self.color_palette["orc"] = 4
         self.color_palette["troll"] = 5
 
-    def handle_messages(self):
-        if self.new_messages:
-            log.info(self.new_messages)
-            self.new_messages.sort()
-            disp = []
-            old_msg = self.new_messages[0]
-            msg_count = 0
-            for message in self.new_messages:
-                log.info(message)
-                if message == old_msg:
-                    msg_count += 1
-                else:
-                    if msg_count > 1:
-                        disp.insert(0,"%s x%s" % (old_msg,msg_count))
-                    else: disp.insert(0,old_msg)
-                    old_msg = message
-                    msg_count = 1
-            disp.insert(0,old_msg)
-            if len(disp) < self.messages_view.getmaxyx()[0]:
-                log.info(disp)
-                for line, message in enumerate(disp):
-                    self.messages_view.addstr(line,1,message)
-            if len(disp) > self.messages_view.getmaxyx()[0]:
-                for line, message in enumerate(disp[-9:]):
-                    self.messages_view.addstr(line,1,message)
-                self.messages_view.addstr(10,1,"-more-")
-                self.messages.extend(disp[:-9])
-                del self.new_messages[:-9]
-
     def main_loop(self):
         while 1:
             self.draw_screen()
