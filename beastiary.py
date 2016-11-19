@@ -1,5 +1,7 @@
 from fighter import Fighter
 import logging
+from uuid import uuid4
+import maps
 
 log = logging.getLogger(__name__)
 DIRECTIONS = {"North":(0,-1), "NorthEast": (1,-1), "East":(1,0),
@@ -19,12 +21,15 @@ class Monster():
         self.ai_comp = ai_comp
         self.fighter_comp = fighter_comp
         self.level = level
+        self.id = uuid4()
         if self.fighter_comp:
             if self.fighter_comp.owner is None:
                 self.fighter_comp.owner = self
 
     def take_turn(self):
-        if self.ai_comp: self.ai_comp.take_turn()
+        if self.level.lookup(self.x, self.y).value > 10:
+            return False
+        elif self.ai_comp: self.ai_comp.take_turn()
 
         else: return "The %s growls!" % (self.name)
 
@@ -46,6 +51,33 @@ class Monster():
             self.x = newX
             self.y = newY
 
-        elif type(target) != Tile:
+        elif type(target) != type(maps.Tile):
             target.get_attacked(self)
         else: return "Blocked by wall!"
+
+    def get_speed(self):
+        return self.fighter_comp.speed
+
+    def __eq__(self,other):
+        if self.id == other.id: return True
+        else: return False
+
+    def __ne__(self,other):
+        if self.id != other.id: return True
+        else: return False
+
+    def __gt__(self,other):
+        if self.id > other.id: return True
+        else: return False
+
+    def __ge__(self,other):
+        if self.id >= other.id: return True
+        else: return False
+
+    def __lt__(self,other):
+        if self.id < other.id: return True
+        else: return False
+
+    def __le__(self,ohter):
+        if self.id <= other.id: return True
+        else: return False

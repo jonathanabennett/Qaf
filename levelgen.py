@@ -33,7 +33,7 @@ class MapGenerator:
     self.map = Map(maxX, maxY)
     self.player = Player(0,0,self.map)
     self.map.player = self.player
-    self.map.add_monster(0.0, self.player)
+    self.map.add_monster(self.player)
     log.info("maxX, maxY = %s, %s" % (str(maxX), str(maxY)))
     self.create_map(6, 10, 30)
 
@@ -62,7 +62,7 @@ class MapGenerator:
       else:
         monster = beastiary.Monster(x,y,'T','troll','Troll','An Ugly Troll',
                                     level = self.map,fighter_comp=Fighter(30,2))
-      self.map.add_monster(1.0, monster)
+      self.map.add_monster(monster)
 
 
   def create_map(self, min_size, max_size, max_rooms):

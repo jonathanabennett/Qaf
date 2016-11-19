@@ -7,12 +7,12 @@ log = logging.getLogger(__name__)
 class Fighter():
     """Component required by all things which can take and cause damage."""
 
-    def __init__(self,hp,atk):
+    def __init__(self,hp,atk, speed=1.0):
         self.owner = None
         self.hp = hp
         self.current_hp = hp
         self.atk = atk
-        self.speed = 0.5
+        self.speed = speed
 
     def attack(self,target):     
         dmg = floor(self.atk * uniform(0.5,1,5))

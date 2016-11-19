@@ -1,11 +1,12 @@
 import curses, sys
 import logging
+import heapq
 from math import floor
 import beastiary
 from player import Player
 from maps import Map
 from levelgen import MapGenerator
-from messages import MessageWindow
+from messages import MessageWindow, Message
 
 logging.basicConfig(filename="Qaf.log")
 log = logging.getLogger(__name__)
@@ -23,15 +24,19 @@ class Game():
         self.main.border(0)
         self.map_view = self.main.subwin(self.height-10,self.width-20,0,20)
         self.messages_view = self.main.subwin(self.height-10, 0)
-        self.msg_handler = MessageWindow(window=self.message_view,
+        self.msg_handler = MessageWindow(window=self.messages_view,
                                          message_list=[])
         self.char_sheet = self.main.subwin(self.height-10, 20,0,0)
         self.map_height = 100
         self.map_width = 100
         if self.map_height < self.height-10: self.map_height = self.height-10
         if self.map_width < self.width-20: self.map_width = self.width - 20
-        self.current_level = MapGenerator(self.map_width,self.map_height,).map
+        self.current_level = MapGenerator(self.map_width,self.map_height).map
         self.player = self.current_level.player
+        self.event_queue = []
+        self.timer = 0.0
+        heapq.heappush(self.event_queue, (0.0, self.player))
+        self.populate_events()
         self.game_state = "playing"
         self.took_turn = False
         self.msg_handler.new_message(Message(0.0,"Welcome to Qaf."))
@@ -55,6 +60,15 @@ class Game():
                                        "args":{"placeholder":0}}}
         self.main_loop()
 
+    def populate_events(self):
+        for thing in self.current_level.things:
+            self.add_event(thing)
+        return True
+
+    def add_event(self,event):
+        heapq.heappush(self.event_queue, (self.timer + event.get_speed(), event))
+        return True
+
     def colorize(self):
         curses.use_default_colors()
         curses.init_pair(1, 191, -1)
@@ -72,20 +86,23 @@ class Game():
 
     def main_loop(self):
         while 1:
-            self.draw_screen()
             self.took_turn = False
+            self.timer, next_actor = heapq.heappop(self.event_queue)
+            if type(next_actor) == Player:
+                self.draw_screen()
+                c = self.main.getch()
+                try:
+                    msg = self.keybindings[c]["function"](**self.keybindings[c]["args"])
+                    if msg:
+                        self.msg_handler.new_message(Message(self.timer, msg))
+                    self.add_event(next_actor)
+                except KeyError: continue
+            else:
+                msg = next_actor.take_turn()
+                if msg:
+                    self.msg_handler.new_message(Message(self.timer, msg))
+                self.add_event(next_actor)
 
-            c = self.main.getch()
-            try:
-                self.keybindings[c]["function"](**self.keybindings[c]["args"])
-            except KeyError:
-                continue
-            if self.game_state == "playing" and self.took_turn == True:
-                for thing in self.things:
-                    if self.map.lookup(thing.x,thing.y).value < 10:
-                        msg = thing.take_turn()
-                        log.info(msg)
-                        if msg: self.msg_handler.new_message(1.0, msg)
 
     def look(self):
         """I want look to define a 'cursor' Thing. This thing will be added

@@ -5,7 +5,6 @@ import uuid
 import heapq
 import logging
 import beastiary
-import player
 
 log = logging.getLogger(__name__)
 
@@ -76,10 +75,6 @@ class Tile:
 class Map:
 
     def __init__(self, maxx, maxy, grid={}, things=[]):
-        """The correct input for things is a list of tuples containing (f_time,
-        m_monster) where:
-            f_time = Float indicating the next time value the monster can act
-            m_monster = a Monster object or Player object."""
         self.width = maxx
         self.height = maxy
         self.grid = grid
@@ -92,7 +87,7 @@ class Map:
     def lookup(self,x,y):
         if 0 <= x < self.width and 0 <= y < self.height:
             return self.grid[(x,y)]
-        else: return False
+        else: return Tile(True,x,y)
 
     def get_neighbor_addrs(self, x, y):
         ret = []
@@ -101,18 +96,14 @@ class Map:
                 ret.append((i,j))
         return ret
 
-    def next_monster(self):
-        return heapq.heappop(self.things)
-
-    def add_monster(self,time,monster):
-        self.things.append((time+monster.fighter_comp.speed, monster))
-        return len(self.things)
+    def add_monster(self, monster):
+        self.things.append(monster)
 
     def blocked(self,x,y):
         if self.lookup(x,y).blocked:
             return self.lookup(x,y)
         else:
-            for time, thing in self.things:
+            for thing in self.things:
                 if thing.x == x and thing.y == y:
                     return thing
             return False
@@ -153,9 +144,9 @@ class Map:
 
         thing_ret = []
         for thing in self.things:
-            if minX <= thing[1].x <= maxX:
-                if minY <= thing[1].y <= maxY:
-                    thing_ret.append(thing[1])
+            if minX <= thing.x <= maxX:
+                if minY <= thing.y <= maxY:
+                    thing_ret.append(thing)
 
         return (map_ret, thing_ret)
 
