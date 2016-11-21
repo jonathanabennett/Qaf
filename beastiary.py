@@ -1,4 +1,4 @@
-from fighter import Fighter
+from jfighter import Fighter
 import logging
 from uuid import uuid4
 import maps
@@ -35,12 +35,9 @@ class Monster():
 
     def get_damaged(self,attacker,damage):
         if self.fighter_comp:
-            return self.fighter_comp.get_damaged(damage) #Will return the remaining HP
+            return self.fighter_comp.damaged(damage) #Will return the remaining HP
 
         else: return "The %s laughs at your pitiful attack!" % (self.name)
-
-    def get_attacked(self,attacker):
-        return "Good try."
 
     def move_or_attack(self,direction):
         newX = self.x + DIRECTIONS[direction][0]
@@ -52,7 +49,7 @@ class Monster():
             self.y = newY
 
         elif type(target) != type(maps.Tile):
-            target.get_attacked(self)
+            return self.fighter_comp.attack(target)
         else: return "Blocked by wall!"
 
     def get_speed(self):

@@ -2,7 +2,7 @@
 the various classes."""
 import logging
 import beastiary
-from fighter import Fighter
+from jfighter import Fighter
 
 log = logging.getLogger(__name__)
 
@@ -13,4 +13,5 @@ class Player(beastiary.Monster):
         beastiary.Monster.__init__(self, x=x, y=y, name="player", disp="@",
                          color="Player",
                          description="A hero of might and courage.",
-                         level=level, blocks=True, fighter_comp=Fighter(10,4))
+                         level=level, blocks=True,
+                                   fighter_comp=Fighter(st=10,dx=10,iq=10,ht=10))
