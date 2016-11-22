@@ -92,7 +92,7 @@ class MapGenerator:
                 self.player.y = floor(new_y)
             else:
                 prev_x, prev_y = rooms[len(rooms)-1].center()
-                self.place_things(new_room)
+#                self.place_things(new_room)
                 if randint(0,2) == 1:
                     self.create_h_tunnel(prev_x, new_x, prev_y)
                     self.create_v_tunnel(prev_y, new_y, new_x)
