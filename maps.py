@@ -104,7 +104,7 @@ class Map:
             return self.lookup(x,y)
         else:
             for thing in self.things:
-                if thing.x == x and thing.y == y:
+                if thing.x == x and thing.y == y and thing.blocks:
                     return thing
             return False
     def __repr__(self):

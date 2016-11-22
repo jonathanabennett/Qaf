@@ -23,7 +23,7 @@ class Monster():
         self.level = level
         self.id = uuid4()
         if self.fighter_comp:
-            if self.fighter_comp.owner is None:
+            if not self.fighter_comp.owner:
                 self.fighter_comp.owner = self
 
     def take_turn(self):
@@ -54,6 +54,10 @@ class Monster():
 
     def get_speed(self):
         return self.fighter_comp.speed
+
+    def died(self):
+        self.disp = '%'
+        self.blocks = False
 
     def __eq__(self,other):
         if self.id == other.id: return True

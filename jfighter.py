@@ -122,4 +122,6 @@ class Fighter():
 
     def damaged(self,dmg):
         self.cur_hp -= dmg
+        if self.cur_hp < 0:
+            self.owner.died()
         return self.cur_hp

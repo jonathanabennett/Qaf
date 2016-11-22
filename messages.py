@@ -43,7 +43,9 @@ class MessageWindow():
 
     def update_messages(self):
         for line, message in enumerate(self.message_list):
-            self.window.addstr(line+1, 1, str(message))
+            try:
+                self.window.addstr(line+1, 1, str(message))
+            except curses.error: pass
         self.window.refresh()
         return True
 #        if len(self.message_list) < self.window.getmaxyx()[0]:
