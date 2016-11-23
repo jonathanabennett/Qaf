@@ -8,8 +8,7 @@ from maps import Map
 from levelgen import MapGenerator
 from messages import MessageWindow, Message
 
-logging.basicConfig(filename="Qaf.log")
-log = logging.getLogger(__name__)
+logging.basicConfig(filename="Qaf.log", level=logging.DEBUG)
 
 class Game():
     """This is the master Object, coordinating everything. It is also what gets
@@ -20,7 +19,6 @@ class Game():
         self.main.scrollok(0)
         self.colorize()
         self.height, self.width = self.main.getmaxyx()
-        logging.debug(self.height)
         self.main.border(0)
         self.map_view = self.main.subwin(self.height-10,self.width-20,0,20)
         self.messages_view = self.main.subwin(self.height-10, 0)
@@ -146,16 +144,14 @@ class Game():
             if minY == 0: maxY = self.height-10
             else: minY = maxY - (self.height-10)
 
-        log.info("minX = %s, maxX = %s, minY = %s, maxY = %s" % (minX, maxX,
+        logging.info("minX = %s, maxX = %s, minY = %s, maxY = %s" % (minX, maxX,
                                                                  minY, maxY))
 
         grid,things = self.current_level.full_render(minX,maxX,minY,maxY)
 
-        #This has to be replaced with references to grid
         for y in range(len(grid)):
             for x in range(len(grid[y])):
                 wall = grid[y][x].blocked
-                logging.info(wall)
                 if wall:
                     try:
                         self.map_view.addch(y, x," ",
@@ -168,6 +164,7 @@ class Game():
                     except curses.error: pass
 
         for thing in things:
+            logging.debug(str(thing))
             self.draw_thing(thing,minX,minY)
         self.draw_thing(self.player,minX,minY)
         self.char_sheet.box()

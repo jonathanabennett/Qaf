@@ -54,7 +54,7 @@ class Skill():
         self.owner = owner
 
     def skill_check(self,modifiers):
-        target = (self.owner.stats[self.attribute]*5) + level + modifiers
+        target = (self.owner.stats[self.attribute]*5) + self.level + modifiers
         roll = randint(1,100)
         self.advance_check(target)
         return roll < target
@@ -63,7 +63,10 @@ class Skill():
         if target < 0: target = 0
         if target > 100: target = 100
         diff_mod = (-0.52 * target**2) + (5.1 * target) + 10
-        points += (uniform(0.0,1.0) * diff_mod)
+        self.points += (uniform(0.0,1.0) * diff_mod)
+        while self.points >= self.level:
+            self.level += 1
+            self.points -= self.level
 
     def __repr__(self):
         return "%s (%s): %s (%04f)" % (self.name, self.attribute, self.level,
@@ -111,11 +114,17 @@ class Fighter():
         self.owner = False
 
     def add_skill(self, skillname, base_attribute, starting_level, starting_points):
-        self.skill[skillname] = Skill(skillname, starting_level,
-                                      starting_points, starting_level, self)
+        self.skills[skillname] = Skill(skillname, starting_level,
+                                      starting_points, base_attribute, self)
 
     def attack(self, target):
-        dmg = self.roll_dmg()
+        try:
+            sk = self.skills["Attack"]
+        except:
+            self.add_skill("Attack", 'ST', 0, 0)
+        dmg = 0
+        if self.skills["Attack"].skill_check(0):
+            dmg = self.roll_dmg()
         return target.get_damaged(self.owner, dmg)
 
     def roll_dmg(self):

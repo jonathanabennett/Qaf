@@ -57,9 +57,10 @@ class MapGenerator:
             y = randint(room.y1+1, room.y2-1)
 
             if randint(0, 100) < 80:
-                monster = beastiary.create_orc(x, y, self.map)
+                monster = beastiary.create_orc(x=x, y=y, level=self.map)
             else:
                 monster = beastiary.create_troll(x, y, self.map)
+            log.debug(str(monster))
             self.map.add_monster(monster)
 
 
@@ -82,18 +83,22 @@ class MapGenerator:
             if not failed:
                 self.create_room(new_room)
                 new_x, new_y = new_room.center()
+                log.debug("Room: x1=%s, x2=%s, y1=%s, y2=%s" % (new_room.x1,
+                                                                new_room.x2,
+                                                                new_room.y1,
+                                                                new_room.y2))
 
-            if len(rooms) == 0:
-                self.player.x = floor(new_x)
-                self.player.y = floor(new_y)
-            else:
-                prev_x, prev_y = rooms[len(rooms)-1].center()
-                self.place_things(new_room)
-                if randint(0,2) == 1:
-                    self.create_h_tunnel(prev_x, new_x, prev_y)
-                    self.create_v_tunnel(prev_y, new_y, new_x)
-
+                if len(rooms) == 0:
+                    self.player.x = floor(new_x)
+                    self.player.y = floor(new_y)
                 else:
-                    self.create_v_tunnel(prev_y, new_y, prev_x)
-                    self.create_h_tunnel(prev_x, new_x, new_y)
-            rooms.append(new_room)
+                    prev_x, prev_y = rooms[len(rooms)-1].center()
+                    self.place_things(new_room)
+                    if randint(0,2) == 1:
+                        self.create_h_tunnel(prev_x, new_x, prev_y)
+                        self.create_v_tunnel(prev_y, new_y, new_x)
+
+                    else:
+                        self.create_v_tunnel(prev_y, new_y, prev_x)
+                        self.create_h_tunnel(prev_x, new_x, new_y)
+                rooms.append(new_room)
