@@ -107,6 +107,7 @@ class Map:
                 if thing.x == x and thing.y == y and thing.blocks:
                     return thing
             return False
+
     def __repr__(self):
         ret = ""
         for y in range(self.height):

@@ -51,19 +51,15 @@ class MapGenerator:
             self.map.lookup(int(floor(x)),int(floor(y))).unblock()
 
     def place_things(self, room):
-        num = randint(0, self.max_residents)
+        num = randint(1, self.max_residents)
         for n in range(num):
             x = randint(room.x1+1, room.x2-1)
             y = randint(room.y1+1, room.y2-1)
 
             if randint(0, 100) < 80:
-                fgt_comp = Fighter(st=10,dx=10,iq=10,ht=10)
-                monster = beastiary.Monster(x, y,'o','orc','Orc','An Angry Orc',
-                                            level=self.map,fighter_comp=fgt_comp)
+                monster = beastiary.create_orc(x, y, self.map)
             else:
-                fgt_comp = Fighter(st=14,dx=8,iq=6,ht=10)
-                monster = beastiary.Monster(x,y,'T','troll','Troll','An Ugly Troll',
-                                            level = self.map,fighter_comp=fgt_comp)
+                monster = beastiary.create_troll(x, y, self.map)
             self.map.add_monster(monster)
 
 
@@ -92,7 +88,7 @@ class MapGenerator:
                 self.player.y = floor(new_y)
             else:
                 prev_x, prev_y = rooms[len(rooms)-1].center()
-#                self.place_things(new_room)
+                self.place_things(new_room)
                 if randint(0,2) == 1:
                     self.create_h_tunnel(prev_x, new_x, prev_y)
                     self.create_v_tunnel(prev_y, new_y, new_x)

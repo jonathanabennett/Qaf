@@ -110,8 +110,9 @@ class Fighter():
         self.skills = skills
         self.owner = False
 
-    def add_skill(self, skill, base_attribute, starting_level, starting_points):
-        pass
+    def add_skill(self, skillname, base_attribute, starting_level, starting_points):
+        self.skill[skillname] = Skill(skillname, starting_level,
+                                      starting_points, starting_level, self)
 
     def attack(self, target):
         dmg = self.roll_dmg()
