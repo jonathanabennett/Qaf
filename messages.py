@@ -29,6 +29,7 @@ class MessageWindow():
     def __init__(self,window, message_list):
         self.window = window
         self.message_list = message_list
+        self.displayed_messages = []
 
     def new_message(self, msg):
         if self.message_list:
@@ -41,11 +42,19 @@ class MessageWindow():
             self.message_list.append(msg)
             return True
 
+    def purge_messages(self):
+        for message in self.message_list:
+            if message.displayed:
+                self.displayed_messages.append(message)
+                self.message_list.remove(message)
+
     def update_messages(self):
         for line, message in enumerate(self.message_list):
             try:
                 self.window.addstr(line+1, 1, str(message))
             except curses.error: pass
+            self.message_list[line].displayed = True
+        self.purge_messages()
         self.window.refresh()
         return True
 #        if len(self.message_list) < self.window.getmaxyx()[0]:
