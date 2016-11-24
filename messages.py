@@ -49,6 +49,9 @@ class MessageWindow():
                 self.message_list.remove(message)
 
     def update_messages(self):
+        self.window.clear()
+        if len(self.message_list) < self.window.getmaxyx()[0]:
+            pass
         for line, message in enumerate(self.message_list):
             try:
                 self.window.addstr(line+1, 1, str(message))

@@ -7,6 +7,7 @@ from player import Player
 from maps import Map
 from levelgen import MapGenerator
 from messages import MessageWindow, Message
+from charsheet import CharSheet
 
 logging.basicConfig(filename="Qaf.log", level=logging.DEBUG)
 
@@ -31,6 +32,7 @@ class Game():
         if self.map_width < self.width-20: self.map_width = self.width - 20
         self.current_level = MapGenerator(self.map_width,self.map_height).map
         self.player = self.current_level.player
+        self.char_sheet = CharSheet(self.char_sheet, self.player)
         self.event_queue = []
         self.timer = 0.0
         heapq.heappush(self.event_queue, (0.0, self.player))
@@ -167,11 +169,9 @@ class Game():
             logging.debug(str(thing))
             self.draw_thing(thing,minX,minY)
         self.draw_thing(self.player,minX,minY)
-        self.char_sheet.box()
 
         self.msg_handler.update_messages()
-        try: self.char_sheet.addstr(1,1,"Character Sheet")
-        except curses.error: pass
+        self.char_sheet.update_sheet()
 
         self.map_view.refresh()
 
