@@ -87,7 +87,9 @@ class Map:
     def lookup(self,x,y):
         if 0 <= x < self.width and 0 <= y < self.height:
             return self.grid[(x,y)]
-        else: return Tile(True,x,y)
+        else:
+            log.debug("Not a real tile.")
+            return Tile(True,x,y)
 
     def get_neighbor_addrs(self, x, y):
         ret = []
@@ -152,6 +154,7 @@ class Map:
         return (map_ret, thing_ret)
 
     def heatmap(self, source_x,source_y):
+        log.debug("Updating Heatmap.")
         for tile in self.grid.values():
             tile.value = sys.maxsize
         l_open = []
@@ -174,6 +177,8 @@ class Map:
 
 if __name__ == "__main__":
     m = Map(10,10)
+    for tile in m.grid.values():
+        tile.unblock()
     ret = m.heatmap(6,6)
     pstr = ""
     for y in range(len(ret)):

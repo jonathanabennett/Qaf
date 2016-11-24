@@ -3,6 +3,7 @@ import logging
 from uuid import uuid4
 import maps
 from random import randint
+from ai import base
 
 log = logging.getLogger(__name__)
 DIRECTIONS = {"North":(0,-1), "NorthEast": (1,-1), "East":(1,0),
@@ -26,19 +27,27 @@ class Monster():
         if self.fighter_comp:
             if not self.fighter_comp.owner:
                 self.fighter_comp.owner = self
+        if self.ai_comp:
+            if not self.ai_comp.owner:
+                self.ai_comp.owner = self
 
     def take_turn(self):
-        if self.level.lookup(self.x, self.y).value > 10:
-            return False
-        elif self.ai_comp: self.ai_comp.take_turn()
+        if self.ai_comp:
+            log.debug("Passing to %s's AI." % (self.name))
+            self.ai_comp.take_turn()
 
-        else: return "The %s growls!" % (self.name)
 
     def get_damaged(self,attacker,damage):
         if self.fighter_comp:
             return self.fighter_comp.damaged(damage) #Will return the remaining HP
 
         else: return "The %s laughs at your pitiful attack!" % (self.name)
+
+    def move_to(self, x, y):
+        target = self.level.blocked(x,y)
+        if not target:
+            self.x = x
+            self.y = y
 
     def move_or_attack(self,direction):
         newX = self.x + DIRECTIONS[direction][0]
@@ -94,8 +103,9 @@ def create_orc(x,y,level):
     iq = randint(6,10)
     ht = randint(9,13)
     fgt_comp = Fighter(st,dx,iq,ht)
+    ai_comp = base.BaseAI()
     ret = Monster(x,y,'o','orc','Orc','An Onery Orc',level=level,
-                  fighter_comp=fgt_comp)
+                  fighter_comp=fgt_comp, ai_comp=ai_comp)
     return ret
 
 def create_troll(x,y,level):
@@ -103,6 +113,7 @@ def create_troll(x,y,level):
     dx = randint(6,10)
     iq = randint(4,8)
     ht = randint(10,14)
+    ai_comp = base.BaseAI()
     fgt_comp = Fighter(st,dx,iq,ht)
     return Monster(x,y,'T','troll','Troll','A Terrible Troll', level = level,
-                   fighter_comp = fgt_comp)
+                   fighter_comp = fgt_comp, ai_comp=ai_comp)

@@ -3,7 +3,6 @@ from random import randint
 import logging
 from math import floor
 import beastiary
-from jfighter import Fighter
 from player import Player
 
 log = logging.getLogger(__name__)

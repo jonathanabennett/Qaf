@@ -88,7 +88,7 @@ class Game():
         while 1:
             self.took_turn = False
             self.timer, next_actor = heapq.heappop(self.event_queue)
-            if type(next_actor) == Player:
+            if isinstance(next_actor, Player):
                 self.draw_screen()
                 c = self.main.getch()
                 try:
@@ -113,6 +113,7 @@ class Game():
         itself from the things list. """
         cursor = Thing(self.player.x,self.player.y, "X")
         self.things.insert(0, cursor)
+        return True
 
     def clear_thing(self, y, x, thing):
         """Broken out to handle stacks of things in one location, resurrecting
@@ -166,7 +167,7 @@ class Game():
                     except curses.error: pass
 
         for thing in things:
-            logging.debug(str(thing))
+#            logging.debug(str(thing))
             self.draw_thing(thing,minX,minY)
         self.draw_thing(self.player,minX,minY)
 
