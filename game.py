@@ -41,21 +41,29 @@ class Game():
         self.took_turn = False
         self.msg_handler.new_message(Message(0.0,"Welcome to Qaf."))
         self.keybindings = {ord("k"): {"function":self.player.move_or_attack,
-                                       "args":{"direction":"North"}},
+                                       "args":{"direction":"North",
+                                               "level": self.current_level}},
                             ord('j'): {"function":self.player.move_or_attack,
-                                       "args":{"direction":"South"}},
+                                       "args":{"direction":"South",
+                                               "level": self.current_level}},
                             ord('h'): {"function":self.player.move_or_attack,
-                                       "args":{"direction":"West"}},
+                                       "args":{"direction":"West",
+                                               "level": self.current_level}},
                             ord('l'): {"function":self.player.move_or_attack,
-                                       "args":{"direction":"East"}},
+                                       "args":{"direction":"East",
+                                               "level": self.current_level}},
                             ord('y'): {"function":self.player.move_or_attack,
-                                       "args":{"direction":"NorthWest"}},
+                                       "args":{"direction":"NorthWest",
+                                               "level": self.current_level}},
                             ord('u'): {"function":self.player.move_or_attack,
-                                       "args":{"direction":"NorthEast"}},
+                                       "args":{"direction":"NorthEast",
+                                               "level": self.current_level}},
                             ord('b'): {"function":self.player.move_or_attack,
-                                       "args":{"direction":"SouthWest"}},
+                                       "args":{"direction":"SouthWest",
+                                               "level": self.current_level}},
                             ord('n'): {"function":self.player.move_or_attack,
-                                       "args":{"direction":"SouthEast"}},
+                                       "args":{"direction":"SouthEast",
+                                               "level": self.current_level}},
                             ord('q'): {"function":self.save_game,
                                        "args":{"placeholder":0}}}
         self.main_loop()
@@ -98,7 +106,7 @@ class Game():
                     self.add_event(next_actor)
                 except KeyError: continue
             else:
-                msg = next_actor.take_turn()
+                msg = next_actor.take_turn(self.current_level)
                 if msg:
                     self.msg_handler.new_message(Message(self.timer, msg))
                 self.add_event(next_actor)

@@ -56,9 +56,9 @@ class MapGenerator:
             y = randint(room.y1+1, room.y2-1)
 
             if randint(0, 100) < 80:
-                monster = beastiary.create_orc(x=x, y=y, level=self.map)
+                monster = beastiary.create_orc(x=x, y=y)
             else:
-                monster = beastiary.create_troll(x, y, self.map)
+                monster = beastiary.create_troll(x, y)
             log.debug(str(monster))
             self.map.add_monster(monster)
 
@@ -101,3 +101,7 @@ class MapGenerator:
                         self.create_v_tunnel(prev_y, new_y, prev_x)
                         self.create_h_tunnel(prev_x, new_x, new_y)
                 rooms.append(new_room)
+
+if __name__ == "__main__":
+    m = MapGenerator(40,40).map
+    print(m.heatmap(m.player.x, m.player.y))

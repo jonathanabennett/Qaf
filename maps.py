@@ -133,7 +133,9 @@ class Map:
             for y in range(minY,maxY):
                 ret.append([])
                 for x in range(minX,maxX):
-                    ret[y].append(self.lookup(x,y).value)
+                    if self.lookup(x,y).value == sys.maxsize:
+                        ret[y].append("#")
+                    else: ret[y].append(self.lookup(x,y).value)
         return ret
 
     def full_render(self, minX, maxX, minY, maxY, heatp=False):

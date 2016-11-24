@@ -11,15 +11,13 @@ class BaseAI():
         self.state = "Aggressive"
         self.owner = False
 
-    def check_neighbors(self):
-        neighbors_addrs = self.owner.level.get_neighbor_addrs(self.owner.x,
-                                                              self.owner.y)
-        neighbors = [self.owner.level.lookup(t[0],t[1]) for t in
-                     neighbors_addrs]
+    def check_neighbors(self, level):
+        neighbors_addrs = level.get_neighbor_addrs(self.owner.x, self.owner.y)
+        neighbors = [level.lookup(t[0],t[1]) for t in neighbors_addrs]
         return sorted(neighbors, key=lambda tile:tile.value)
 
-    def take_turn(self):
-        tile = self.owner.level.lookup(self.owner.x, self.owner.y)
+    def take_turn(self, level):
+        tile = level.lookup(self.owner.x, self.owner.y)
         if tile.value > 10:
             log.debug("Tile %s,%s is %s tiles away." %(tile.x, tile.y,
                                                        tile.value))
@@ -45,5 +43,5 @@ class BaseAI():
                                                                       dest.y))
                     if dest.value <= tile.value:
                         log.debug("Tile %s, %s is closer!" % (dest.x, dest.y))
-                        if self.owner.move_to(dest.x, dest.y):
+                        if self.owner.move_to(dest.x, dest.y, level):
                             finished = True

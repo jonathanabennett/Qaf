@@ -11,7 +11,7 @@ DIRECTIONS = {"North":(0,-1), "NorthEast": (1,-1), "East":(1,0),
               "West":(-1,0), "NorthWest":(-1,-1)}
 
 class Monster():
-    def __init__(self,x,y,disp,color,name,description,level,blocks=True,
+    def __init__(self,x,y,disp,color,name,description,blocks=True,
                  ai_comp=None,fighter_comp=None):
         self.x = x
         self.y = y
@@ -22,7 +22,6 @@ class Monster():
         self.blocks = blocks
         self.ai_comp = ai_comp
         self.fighter_comp = fighter_comp
-        self.level = level
         self.id = uuid4()
         if self.fighter_comp:
             if not self.fighter_comp.owner:
@@ -31,10 +30,10 @@ class Monster():
             if not self.ai_comp.owner:
                 self.ai_comp.owner = self
 
-    def take_turn(self):
+    def take_turn(self, level):
         if self.ai_comp:
             log.debug("Passing to %s's AI." % (self.name))
-            self.ai_comp.take_turn()
+            self.ai_comp.take_turn(level)
 
 
     def get_damaged(self,attacker,damage):
@@ -43,17 +42,17 @@ class Monster():
 
         else: return "The %s laughs at your pitiful attack!" % (self.name)
 
-    def move_to(self, x, y):
-        target = self.level.blocked(x,y)
+    def move_to(self, x, y, level):
+        target = level.blocked(x,y)
         if not target:
             self.x = x
             self.y = y
 
-    def move_or_attack(self,direction):
+    def move_or_attack(self,direction, level):
         newX = self.x + DIRECTIONS[direction][0]
         newY = self.y + DIRECTIONS[direction][1]
 
-        target = self.level.blocked(newX,newY)
+        target = level.blocked(newX,newY)
         if not target:
             self.x = newX
             self.y = newY
@@ -97,23 +96,23 @@ class Monster():
         return "%s at %s, %s" % (self.name, self.x, self.y)
 
 
-def create_orc(x,y,level):
+def create_orc(x,y):
     st = randint(8,12)
     dx = randint(8,11)
     iq = randint(6,10)
     ht = randint(9,13)
     fgt_comp = Fighter(st,dx,iq,ht)
     ai_comp = base.BaseAI()
-    ret = Monster(x,y,'o','orc','Orc','An Onery Orc',level=level,
+    ret = Monster(x,y,'o','orc','Orc','An Onery Orc',
                   fighter_comp=fgt_comp, ai_comp=ai_comp)
     return ret
 
-def create_troll(x,y,level):
+def create_troll(x,y):
     st = randint(12,16)
     dx = randint(6,10)
     iq = randint(4,8)
     ht = randint(10,14)
     ai_comp = base.BaseAI()
     fgt_comp = Fighter(st,dx,iq,ht)
-    return Monster(x,y,'T','troll','Troll','A Terrible Troll', level = level,
+    return Monster(x,y,'T','troll','Troll','A Terrible Troll',
                    fighter_comp = fgt_comp, ai_comp=ai_comp)
