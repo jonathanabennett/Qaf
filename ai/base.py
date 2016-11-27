@@ -24,7 +24,7 @@ class BaseAI():
             return True
         if self.state == "Aggressive":
             log.debug("%s is taking turn." % (self.owner.name))
-            adjacents = self.check_neighbors()
+            adjacents = self.check_neighbors(level)
             log.debug("%s has %s neighbors." % (self.owner.name,
                                                 len(adjacents)))
             finished = False
@@ -36,7 +36,7 @@ class BaseAI():
                     continue
                 elif dest.value == 0:
                     log.debug("The player! Attack him!")
-                    self.owner.fighter_comp.attack(self.owner.level.player)
+                    self.owner.fighter_comp.attack(level.player)
                     self.finished = True
                 elif not dest.blocked:
                     log.debug("Checking if Tile %s, %s is closer." % (dest.x,

@@ -96,6 +96,7 @@ class Game():
         while 1:
             self.took_turn = False
             self.timer, next_actor = heapq.heappop(self.event_queue)
+            x = self.current_level.heatmap(self.player.x, self.player.y)
             if isinstance(next_actor, Player):
                 self.draw_screen()
                 c = self.main.getch()
@@ -136,7 +137,6 @@ class Game():
         things and a grid (with is a list of lists of tiles. It will draw them
         all on the screen. The next step will be splitting out messaging and
         finally Character sheet display."""
-        self.current_level.heatmap(self.player.x, self.player.y)
         x_offset = floor((self.width - 20) / 2)
         minX = self.player.x - x_offset
         maxX = self.player.x + x_offset - 1

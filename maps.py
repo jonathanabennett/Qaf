@@ -159,6 +159,8 @@ class Map:
         log.debug("Updating Heatmap.")
         for tile in self.grid.values():
             tile.value = sys.maxsize
+            tile.previous = None
+            tile.visited = False
         l_open = []
         source = self.lookup(source_x,source_y)
         if source: l_open.append((0,source,source)) #(value,cell,previous)
@@ -176,16 +178,20 @@ class Map:
 
         return self.render(0,self.width, 0,self.height,heatp=True)
 
+    def print_heatmap(self):
+        ret = ""
+        for y in range(self.height):
+            for x in range(self.width):
+                ret += "%2d" % (self.grid[(x,y)]).value
+            ret += "\n"
+        return ret
+
 
 if __name__ == "__main__":
-    m = Map(10,10)
+    m = Map(50,50)
     for tile in m.grid.values():
         tile.unblock()
-    ret = m.heatmap(6,6)
-    pstr = ""
-    for y in range(len(ret)):
-        for x in range(len(ret[y])):
-            pstr += str(ret[y][x])
-        pstr += "\n"
-
-    print(pstr)
+    m.heatmap(6,6)
+    print(m.print_heatmap())
+    m.heatmap(10,10)
+    print(m.print_heatmap())
