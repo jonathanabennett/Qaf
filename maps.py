@@ -4,7 +4,7 @@ import sys
 import uuid
 import heapq
 import logging
-import beastiary
+from monster import Monster
 
 log = logging.getLogger(__name__)
 

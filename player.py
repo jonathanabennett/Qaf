@@ -3,6 +3,7 @@ the various classes."""
 import logging
 import beastiary
 from jfighter import Fighter, Skill
+from monster import Monster
 
 log = logging.getLogger(__name__)
 
