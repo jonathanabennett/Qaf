@@ -9,12 +9,17 @@ To run, open the folder in your terminal and type python3 game.py.
 Keys:
 
 y   k   u
+
  \  |  /
+
 h - @ - l
+
  /  |  \
+
 b   j   n
 
 s: Rest 1 turn and recover 1 HP.
+
 q: Exit the game.
 
 Saved games are not supported at this time.
