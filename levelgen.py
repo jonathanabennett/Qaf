@@ -1,4 +1,4 @@
-from maps import Map, Tile
+from maps import Level
 from random import randint
 import logging
 from math import floor
@@ -30,7 +30,7 @@ class MapGenerator:
         self.maxY = maxY
         self.max_residents = max_residents
         self.game_instance = game
-        self.map = Map(maxX, maxY)
+        self.map = Level(maxX, maxY)
         self.player = Player(0,0,self.map, self.game_instance)
         self.map.player = self.player
         self.map.add_monster(self.player)

@@ -3,7 +3,6 @@ import logging
 import heapq
 from math import floor
 from player import Player
-from maps import Map
 from levelgen import MapGenerator
 from messages import MessageWindow, Message
 from charsheet import CharSheet
