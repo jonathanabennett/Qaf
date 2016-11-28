@@ -2,7 +2,7 @@ from jfighter import Fighter
 import logging
 from uuid import uuid4
 import maps
-from random import randint
+from random import randint, uniform
 from ai import base
 
 log = logging.getLogger(__name__)
@@ -57,10 +57,13 @@ class Monster():
         if not target:
             self.x = newX
             self.y = newY
+            self.fighter_comp.heal(uniform(0.0,0.2))
 
         elif isinstance(target, maps.Tile):
             return "blocked by wall!"
-        else: return self.fighter_comp.attack(target)
+        else:
+            self.fighter_comp.heal(uniform(0.0,0.2))
+            return self.fighter_comp.attack(target)
 
     def get_speed(self):
         return self.fighter_comp.speed
