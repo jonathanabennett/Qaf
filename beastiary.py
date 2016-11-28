@@ -12,7 +12,7 @@ DIRECTIONS = {"North":(0,-1), "NorthEast": (1,-1), "East":(1,0),
 
 class Monster():
     def __init__(self,x,y,disp,color,name,description,blocks=True,
-                 ai_comp=None,fighter_comp=None):
+                 ai_comp=None,fighter_comp=None, game=None):
         self.x = x
         self.y = y
         self.disp = disp
@@ -22,6 +22,7 @@ class Monster():
         self.blocks = blocks
         self.ai_comp = ai_comp
         self.fighter_comp = fighter_comp
+        self.game_instance = game
         self.id = uuid4()
         if self.fighter_comp:
             if not self.fighter_comp.owner:
@@ -67,6 +68,9 @@ class Monster():
     def died(self):
         self.disp = '%'
         self.blocks = False
+        self.ai_comp = None
+#        self.fighter_comp = None
+        self.game_instance.add_message("%s has died." % (self.name))
 
     def __eq__(self,other):
         if self.id == other.id: return True
@@ -96,23 +100,23 @@ class Monster():
         return "%s at %s, %s" % (self.name, self.x, self.y)
 
 
-def create_orc(x,y):
+def create_orc(x,y, game):
     st = randint(8,12)
     dx = randint(8,11)
     iq = randint(6,10)
     ht = randint(9,13)
     fgt_comp = Fighter(st,dx,iq,ht)
     ai_comp = base.BaseAI()
-    ret = Monster(x,y,'o','orc','Orc','An Onery Orc',
+    ret = Monster(x,y,'o','orc','Orc','An Onery Orc', game=game,
                   fighter_comp=fgt_comp, ai_comp=ai_comp)
     return ret
 
-def create_troll(x,y):
+def create_troll(x,y, game):
     st = randint(12,16)
     dx = randint(6,10)
     iq = randint(4,8)
     ht = randint(10,14)
     ai_comp = base.BaseAI()
     fgt_comp = Fighter(st,dx,iq,ht)
-    return Monster(x,y,'T','troll','Troll','A Terrible Troll',
+    return Monster(x,y,'T','troll','Troll','A Terrible Troll', game=game,
                    fighter_comp = fgt_comp, ai_comp=ai_comp)

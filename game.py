@@ -30,7 +30,7 @@ class Game():
         self.map_width = 100
         if self.map_height < self.height-10: self.map_height = self.height-10
         if self.map_width < self.width-20: self.map_width = self.width - 20
-        self.current_level = MapGenerator(self.map_width,self.map_height).map
+        self.current_level = MapGenerator(self.map_width,self.map_height,self).map
         self.player = self.current_level.player
         self.char_sheet = CharSheet(self.char_sheet, self.player)
         self.event_queue = []
@@ -64,6 +64,8 @@ class Game():
                             ord('n'): {"function":self.player.move_or_attack,
                                        "args":{"direction":"SouthEast",
                                                "level": self.current_level}},
+                            ord('s'): {"function":self.player.rest,
+                                       "args": {}},
                             ord('q'): {"function":self.save_game,
                                        "args":{"placeholder":0}}}
         self.main_loop()
@@ -76,6 +78,9 @@ class Game():
     def add_event(self,event):
         heapq.heappush(self.event_queue, (self.timer + event.get_speed(), event))
         return True
+
+    def remove_event(self, event):
+        pass
 
     def colorize(self):
         curses.use_default_colors()
@@ -96,22 +101,26 @@ class Game():
         while 1:
             self.took_turn = False
             self.timer, next_actor = heapq.heappop(self.event_queue)
-            x = self.current_level.heatmap(self.player.x, self.player.y)
             if isinstance(next_actor, Player):
                 self.draw_screen()
                 c = self.main.getch()
                 try:
                     msg = self.keybindings[c]["function"](**self.keybindings[c]["args"])
                     if msg:
-                        self.msg_handler.new_message(Message(self.timer, msg))
+                        self.add_message(msg)
                     self.add_event(next_actor)
+                    self.current_level.heatmap(self.player.x, self.player.y)
                 except KeyError: continue
             else:
                 msg = next_actor.take_turn(self.current_level)
                 if msg:
-                    self.msg_handler.new_message(Message(self.timer, msg))
+                    if msg == "Game over.":
+                        self.save_game()
+                    self.msg_handler.new_message(Message(msg))
                 self.add_event(next_actor)
 
+    def add_message(self, text):
+        self.msg_handler.new_message(Message(self.timer, text))
 
     def look(self):
         """I want look to define a 'cursor' Thing. This thing will be added

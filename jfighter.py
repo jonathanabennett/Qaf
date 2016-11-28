@@ -115,8 +115,9 @@ class Fighter():
         self.owner = False
 
     def add_skill(self, skillname, base_attribute, starting_level, starting_points):
-        self.skills[skillname] = Skill(skillname, starting_level,
-                                      starting_points, base_attribute, self)
+        self.skills[skillname] = Skill(skillname, float(starting_level),
+                                       float(starting_points), base_attribute,
+                                       self)
 
     def attack(self, target):
         try:
@@ -136,3 +137,7 @@ class Fighter():
         if self.cur_hp < 0:
             self.owner.died()
         return self.cur_hp
+
+    def heal(self,amount):
+        self.cur_hp += amount
+        if self.cur_hp > self.max_hp: self.cur_hp = self.max_hp

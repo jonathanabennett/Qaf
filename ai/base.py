@@ -19,9 +19,8 @@ class BaseAI():
     def take_turn(self, level):
         tile = level.lookup(self.owner.x, self.owner.y)
         if tile.value > 10:
-            log.debug("Tile %s,%s is %s tiles away." %(tile.x, tile.y,
-                                                       tile.value))
             return True
+
         if self.state == "Aggressive":
             log.debug("%s is taking turn." % (self.owner.name))
             adjacents = self.check_neighbors(level)
@@ -31,17 +30,16 @@ class BaseAI():
             while adjacents and not finished:
                 log.debug("Inside decision loop.")
                 dest = adjacents.pop(0)
-                if dest.blocked:
-                    log.debug("Tile %s, %s is blocked." % (dest.x, dest.y))
-                    continue
-                elif dest.value == 0:
+                if dest.value == 0:
                     log.debug("The player! Attack him!")
                     self.owner.fighter_comp.attack(level.player)
-                    self.finished = True
-                elif not dest.blocked:
-                    log.debug("Checking if Tile %s, %s is closer." % (dest.x,
+                    break
+                else:
+                    if not dest.blocked:
+                        log.debug("Checking if Tile %s, %s is closer." % (dest.x,
                                                                       dest.y))
-                    if dest.value <= tile.value:
-                        log.debug("Tile %s, %s is closer!" % (dest.x, dest.y))
-                        if self.owner.move_to(dest.x, dest.y, level):
-                            finished = True
+                        if dest.value < tile.value:
+                            log.debug("Tile %s, %s is closer!" % (dest.x,
+                                                                  dest.y))
+                            if self.owner.move_to(dest.x, dest.y, level):
+                                finished = True

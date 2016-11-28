@@ -32,15 +32,16 @@ class MessageWindow():
         self.displayed_messages = []
 
     def new_message(self, msg):
-        if self.message_list:
-            if self.message_list[-1].merge_message(msg):
-                return True
+        if isinstance(msg, Message):
+            if self.message_list:
+                if self.message_list[-1].merge_message(msg):
+                    return True
+                else:
+                    self.message_list.append(msg)
+                    return True
             else:
                 self.message_list.append(msg)
                 return True
-        else:
-            self.message_list.append(msg)
-            return True
 
     def purge_messages(self):
         for message in self.message_list:
