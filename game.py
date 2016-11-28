@@ -198,6 +198,11 @@ class Game():
         except curses.error: pass
 
     def save_game(self,placeholder):
+        while True:
+            self.map_view.addstr(10,10, "GAME OVER. PRESS A KEY TO CONTINUE.")
+            self.map_view.refresh()
+            if self.main.getch():
+                break
         sys.exit()
 
 def loop(screen):
