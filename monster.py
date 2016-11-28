@@ -95,7 +95,7 @@ class Monster():
         if self.id < other.id: return True
         else: return False
 
-    def __le__(self,ohter):
+    def __le__(self,other):
         if self.id <= other.id: return True
         else: return False
 
