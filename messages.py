@@ -1,5 +1,3 @@
-import curses
-
 class Message():
     """The Message is text and a time. It is used to simplify merging."""
 

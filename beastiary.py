@@ -1,8 +1,7 @@
 from jfighter import Fighter
 import logging
-from uuid import uuid4
 import maps
-from random import randint, uniform
+from random import randint
 from ai import base
 from monster import Monster
 

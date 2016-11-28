@@ -2,8 +2,6 @@ import curses, sys
 import logging
 import heapq
 from math import floor
-import beastiary
-from monster import Monster
 from player import Player
 from maps import Map
 from levelgen import MapGenerator

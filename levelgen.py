@@ -4,7 +4,6 @@ import logging
 from math import floor
 import beastiary
 from player import Player
-from monster import Monster
 
 log = logging.getLogger(__name__)
 
