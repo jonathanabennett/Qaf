@@ -1,5 +1,3 @@
-import heapq
-
 class EventHandler():
     """An Event describes something that happens next. It will determine whose
     turn it is to act, as well as things that happen on a tick such as

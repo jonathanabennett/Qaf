@@ -1,8 +1,7 @@
 from jfighter import *
 import logging
 from uuid import uuid4
-import maps
-import ai
+from tile import Tile
 
 log = logging.getLogger(__name__)
 
@@ -59,7 +58,7 @@ class Monster():
             self.y = newY
             self.fighter_comp.heal(uniform(0.0,0.2))
 
-        elif isinstance(target, maps.Tile):
+        elif isinstance(target, Tile):
             return "blocked by wall!"
         else:
             self.fighter_comp.heal(uniform(0.0,0.2))

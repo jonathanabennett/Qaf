@@ -1,6 +1,3 @@
-import attr
-
-@attr.s
 class BodyPart:
     """A BodyPart is used for the damage model. Stats include
 1) Injuries list

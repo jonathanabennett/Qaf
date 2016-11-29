@@ -1,7 +1,6 @@
 """Defines a player. This will eventually hold all the creation factories for
 the various classes."""
 import logging
-import beastiary
 from jfighter import Fighter, Skill
 from monster import Monster
 
