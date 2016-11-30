@@ -82,8 +82,8 @@ class Game():
 
     def colorize(self):
         curses.use_default_colors()
-        curses.init_pair(1, 8, -1)
-        curses.init_pair(2, -1, 8)
+        curses.init_pair(1, 7, -1)
+        curses.init_pair(2, -1, 7)
         curses.init_pair(3, -1, 0)
         curses.init_pair(4, 2, -1)
         curses.init_pair(5, 3, -1)
