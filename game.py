@@ -96,19 +96,23 @@ class Game():
         self.color_palette["troll"] = 5
 
     def main_loop(self):
-        while 1:
+        while True:
             self.took_turn = False
             self.timer, next_actor = heapq.heappop(self.event_queue)
             if isinstance(next_actor, Player):
-                self.draw_screen()
-                c = self.main.getch()
-                try:
-                    msg = self.keybindings[c]["function"](**self.keybindings[c]["args"])
-                    if msg:
-                        self.add_message(msg)
-                    self.add_event(next_actor)
-                    self.current_level.heatmap(self.player.x, self.player.y)
-                except KeyError: continue
+                while True:
+                    self.draw_screen()
+                    try:
+                        c = self.main.getch()
+                        msg = self.keybindings[c]["function"](**self.keybindings[c]["args"])
+                    except KeyError:
+                        continue
+                    else:
+                        if msg:
+                            self.add_message(msg)
+                        self.add_event(next_actor)
+                        self.current_level.heatmap(self.player.x, self.player.y)
+                        break
             else:
                 msg = next_actor.take_turn(self.current_level)
                 if msg:
@@ -182,7 +186,7 @@ class Game():
                     except curses.error: pass
 
         for thing in things:
-#            logging.debug(str(thing))
+            # logging.debug(str(thing))
             self.draw_thing(thing,minX,minY)
         self.draw_thing(self.player,minX,minY)
 
