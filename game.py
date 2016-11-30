@@ -83,10 +83,10 @@ class Game():
     def colorize(self):
         curses.use_default_colors()
         curses.init_pair(1, 8, -1)
-        curses.init_pair(2, -1, 0)
-        curses.init_pair(3, -1, 1)
-        curses.init_pair(4, 3, -1)
-        curses.init_pair(5, 4, -1)
+        curses.init_pair(2, -1, 8)
+        curses.init_pair(3, -1, 0)
+        curses.init_pair(4, 2, -1)
+        curses.init_pair(5, 3, -1)
         self.color_palette = {}
         self.color_palette["Player"] = 0
         self.color_palette["NPC"] = 1
