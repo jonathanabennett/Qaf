@@ -8,6 +8,7 @@ from messages import MessageWindow, Message
 from charsheet import CharSheet
 
 logging.basicConfig(filename="Qaf.log", level=logging.DEBUG)
+log = logging.getLogger(__name__)
 
 class Game():
     """This is the master Object, coordinating everything. It is also what gets
@@ -166,7 +167,7 @@ class Game():
             if minY == 0: maxY = self.height-10
             else: minY = maxY - (self.height-10)
 
-        logging.info("minX = %s, maxX = %s, minY = %s, maxY = %s" % (minX, maxX,
+        log.info("minX = %s, maxX = %s, minY = %s, maxY = %s" % (minX, maxX,
                                                                  minY, maxY))
 
         grid,things = self.current_level.full_render(minX,maxX,minY,maxY)
