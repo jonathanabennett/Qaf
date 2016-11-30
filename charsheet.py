@@ -9,7 +9,7 @@ class CharSheet:
     def update_sheet(self):
         self.window.clear()
         self.window.addstr(1,1, self.character.name)
-        self.window.addstr(2,1, "HP: %s" % (self.character.fighter_comp.cur_hp))
+        self.window.addstr(2,1, "HP: %3.2f" % (self.character.fighter_comp.cur_hp))
         line = 3
         for skillname, skill in self.character.fighter_comp.skills.items():
             if skill:

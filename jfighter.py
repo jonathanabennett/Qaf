@@ -70,7 +70,7 @@ class Skill():
             self.points -= self.level
 
     def __repr__(self):
-        return "%s (%s): %s (%04f)" % (self.name, self.attribute, self.level,
+        return "%s (%s): %s (%2.4f)" % (self.name, self.attribute, self.level,
                                        self.points)
 
 class Fighter():

@@ -186,8 +186,8 @@ class Game():
                     except curses.error: pass
 
         for thing in things:
-            # logging.debug(str(thing))
-            self.draw_thing(thing,minX,minY)
+            if thing.ai_comp:
+                self.draw_thing(thing,minX,minY)
         self.draw_thing(self.player,minX,minY)
 
         self.msg_handler.update_messages()
