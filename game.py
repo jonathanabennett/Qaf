@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 import curses, sys
 import logging
 import heapq
