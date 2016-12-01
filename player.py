@@ -14,7 +14,7 @@ class Player(Monster):
                          color="Player",
                          description="A hero of might and courage.",
                          blocks=True,
-                         fighter_comp=Fighter(st=14,dx=14,iq=14,ht=14))
+                         fighter_comp=Fighter(st=14,dx=12,iq=14,ht=14))
         self.fighter_comp.add_skill("Attack", 'ST', '10', '0')
 
     def died(self):
