@@ -89,13 +89,19 @@ class Game():
         curses.init_pair(3, -1, 0)
         curses.init_pair(4, 2, -1)
         curses.init_pair(5, 3, -1)
+        curses.init_pair(6, 3, -1)
+        curses.init_pair(7, 6, -1)
+        curses.init_pair(8, 5, -1)
         self.color_palette = {}
         self.color_palette["Player"] = 0
         self.color_palette["NPC"] = 1
         self.color_palette["dark_wall"] = 2
         self.color_palette["dark_floor"] = 3
-        self.color_palette["orc"] = 4
+        self.color_palette["goblinoid"] = 4
         self.color_palette["troll"] = 5
+        self.color_palette['human'] = 6
+        self.color_palette['elf'] = 7
+        self.color_palette['dwarf'] = 8
 
     def main_loop(self):
         while True:

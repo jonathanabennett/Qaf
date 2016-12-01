@@ -6,23 +6,29 @@ from monster import Monster
 
 log = logging.getLogger(__name__)
 
-def create_orc(x,y, game):
-    st = randint(8,12)
-    dx = randint(8,11)
-    iq = randint(6,10)
-    ht = randint(9,13)
-    fgt_comp = Fighter(st,dx,iq,ht)
-    ai_comp = base.BaseAI()
-    ret = Monster(x,y,'o','orc','Orc','An Onery Orc', game=game,
-                  fighter_comp=fgt_comp, ai_comp=ai_comp)
-    return ret
+ORC = {'st':0, 'dx':0, 'iq':-1, 'ht':2, 'disp':'o', 'color':'goblinoid',
+       'name':'Orc', 'desc':'An Onery Orc'}
 
-def create_troll(x,y, game):
-    st = randint(12,16)
-    dx = randint(6,10)
-    iq = randint(4,8)
-    ht = randint(10,14)
-    ai_comp = base.BaseAI()
-    fgt_comp = Fighter(st,dx,iq,ht)
-    return Monster(x,y,'T','troll','Troll','A Terrible Troll', game=game,
-                   fighter_comp = fgt_comp, ai_comp=ai_comp)
+TROLL = {'st':8, 'dx':-3, 'iq':-4, 'ht':2, 'disp':'t', 'color':'troll',
+         'name':'Troll', 'desc':'A Terrible Troll'}
+
+ELF = {'st':-1, 'dx':1, 'iq':2, 'ht':0, 'disp':'e', 'color':'elf',
+       'name':'Elf', 'desc':'An Elegant Elf'}
+
+DWARF = {'st':1, 'dx':-1, 'iq':0, 'ht':1, 'disp':'d', 'color':'dwarf',
+         'name':'Dwarf', 'desc':'A Determined Dwarf'}
+
+HUMAN = {'st':0, 'dx':0, 'iq':0, 'ht':0, 'disp':'h', 'color':'human',
+         'name':'Human', 'desc': 'A Hubristic Human'}
+
+KOBOLD = {'st':-3, 'dx':4, 'iq':1, 'ht':-1, 'disp':'k', 'color':'goblinoid',
+          'name':'Kobold', 'desc': 'A Quick Kobold'}
+
+def create_monster(x,y,game,kind):
+    st = randint(8 + kind['st'], 12 + kind['st'])
+    dx = randint(8 + kind['dx'], 12 + kind['dx'])
+    iq = randint(8 + kind['iq'], 12 + kind['iq'])
+    ht = randint(8 + kind['ht'], 12 + kind['ht'])
+    return Monster(x,y,kind['disp'],kind['color'],kind['name'], kind['desc'],
+                   ai_comp=base.BaseAI(), fighter_comp=Fighter(st, dx, iq, ht),
+                   game=game)
