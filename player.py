@@ -15,7 +15,7 @@ class Player(Monster):
                          description="A hero of might and courage.",
                          blocks=True,
                          fighter_comp=Fighter(st=14,dx=12,iq=14,ht=14))
-        self.fighter_comp.add_skill("Attack", 'ST', '10', '0')
+        self.fighter_comp.add_skill("Attack", 'ST', '10', '0', 'attack')
 
     def died(self):
         self.game_instance.save_game(None)

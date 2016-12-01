@@ -41,7 +41,7 @@ class Skill():
     Every player will have a "default" skill that is used for skills they don't
     have."""
 
-    def __init__(self, name, level, points, attribute, owner):
+    def __init__(self, name, level, points, attribute, owner, group='attack'):
         """Name = The name of the skill, string
         level = the current skill level, a percentage
         points = the points towards the next skill level
@@ -52,6 +52,7 @@ class Skill():
         self.points = points
         self.attribute = attribute
         self.owner = owner
+        self.group = group
 
     def skill_check(self,modifiers):
         target = (self.owner.stats[self.attribute]*5) + self.level + modifiers
@@ -114,18 +115,19 @@ class Fighter():
         self.skills = skills
         self.owner = False
 
-    def add_skill(self, skillname, base_attribute, starting_level, starting_points):
+    def add_skill(self, skillname, base_attribute, starting_level,
+                  starting_points, group):
         self.skills[skillname] = Skill(skillname, float(starting_level),
                                        float(starting_points), base_attribute,
-                                       self)
+                                       self, group)
 
     def attack(self, target):
-        try:
-            sk = self.skills["Attack"]
-        except:
-            self.add_skill("Attack", 'ST', 0, 0)
+        attacks = [skill for skill in self.skills.values() if skill.group=="attack"]
+        if not attacks:
+            self.add_skill("Attack", 'ST', 0, 0, 'attack')
+            attacks.append(self.skills['Attack'])
         dmg = 0
-        if self.skills["Attack"].skill_check(0):
+        if sorted(attacks, key=lambda skill:skill.level, reverse=True)[0].skill_check(0):
             dmg = self.roll_dmg()
         return target.get_damaged(self.owner, dmg)
 
