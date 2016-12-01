@@ -64,7 +64,7 @@ class Skill():
         if target > 100: target = 100
         diff_mod = (-0.52 * target**2) + (5.1 * target) + 10
         if diff_mod < 0: diff_mod = 0.1
-        self.points += (uniform(0.0,1.0) * diff_mod)
+        self.points += (uniform(0.5,1.5) * diff_mod)
         while self.points >= self.level+1:
             self.level += 1
             self.points -= self.level
