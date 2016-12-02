@@ -3,6 +3,7 @@ the various classes."""
 import logging
 from jfighter import Fighter, Skill
 from monster import Monster
+from items import weapon
 
 log = logging.getLogger(__name__)
 
@@ -15,7 +16,12 @@ class Player(Monster):
                          description="A hero of might and courage.",
                          blocks=True,
                          fighter_comp=Fighter(st=14,dx=12,iq=14,ht=14))
-        self.fighter_comp.add_skill("Attack", 'ST', '10', '0', 'attack')
+        self.fighter_comp.equipped['right hand'] = weapon.Weapon('Longsword',
+                                                                 ')', 'player',
+                                                                 game, None, 5,
+                                                                 'slashing', self,
+                                                                 'Longswords')
+        self.fighter_comp.add_skill("Longswords", 'ST', 10, 0, 'attack')
 
     def died(self):
         self.game_instance.save_game(None)

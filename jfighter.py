@@ -146,7 +146,7 @@ class Fighter():
             except:
                 self.add_skill("Attack", 'ST', 0, 0, 'attack')
                 attack_skill = self.skills['Attack']
-                log.debut("I'm learning the basic attack skill.")
+                log.debug("I'm learning the basic attack skill.")
         dmg = 0
         if attack_skill.skill_check(0):
             dmg = self.roll_dmg(weapon)
