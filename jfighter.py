@@ -114,6 +114,10 @@ class Fighter():
 
         self.skills = skills
         self.owner = False
+        self.equipped = {'head':None,
+                         'neck':None,
+                         'right hand':None,
+                        }
 
     def add_skill(self, skillname, base_attribute, starting_level,
                   starting_points, group):
@@ -122,17 +126,37 @@ class Fighter():
                                        self, group)
 
     def attack(self, target):
-        attacks = [skill for skill in self.skills.values() if skill.group=="attack"]
-        if not attacks:
-            self.add_skill("Attack", 'ST', 0, 0, 'attack')
-            attacks.append(self.skills['Attack'])
+        attack_skill = None
+        weapon = None
+        if self.equipped['right hand']:
+            log.debug("I think there is a weapon.")
+            weapon = self.equipped['right hand']
+            try:
+                attack_skill = self.skills[self.equipped['right hand'].skill_name]
+                log.debug("I know how to use it!")
+            except:
+                log.debug("I'm learning a new skill.")
+                self.add_skill(self.equipped['right hand'].skillname, 'ST',
+                               0, 0, 'attack')
+                attack_skill = self.skills[self.equipped['right hand'].skill_name]
+        else:
+            try:
+                attack_skill = self.skills['Attack']
+                log.debug("I'm using the basic attack skill.")
+            except:
+                self.add_skill("Attack", 'ST', 0, 0, 'attack')
+                attack_skill = self.skills['Attack']
+                log.debut("I'm learning the basic attack skill.")
         dmg = 0
-        if sorted(attacks, key=lambda skill:skill.level, reverse=True)[0].skill_check(0):
-            dmg = self.roll_dmg()
+        if attack_skill.skill_check(0):
+            dmg = self.roll_dmg(weapon)
+            log.debug("I did %s damage." % (dmg))
         return target.get_damaged(self.owner, dmg)
 
-    def roll_dmg(self):
-        return (self.stats['ST'] * uniform(0.5,1.5))/10.0
+    def roll_dmg(self, weapon):
+        if weapon:
+            return ((self.stats['ST'] + weapon.damage) * uniform(0.5,1.5))/10.0
+        else: return (self.stats['ST'] * uniform(0.5,1.5))/10.0
 
     def damaged(self,dmg):
         self.cur_hp -= dmg
