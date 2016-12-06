@@ -55,20 +55,23 @@ class MapGenerator:
         for n in range(num):
             x = randint(room.x1+1, room.x2-1)
             y = randint(room.y1+1, room.y2-1)
-            select = randint(0,100)
+            select = randint(0,1000)
 
-            if select < 40:
+            if select < 250:
                 monster = beastiary.create_monster(x, y, self.game_instance,
                                                    beastiary.ORC)
-            elif select > 40 and select < 60:
+            elif select > 250 and select < 450:
                 monster = beastiary.create_monster(x, y, self.game_instance,
                                                    beastiary.HUMAN)
-            elif select > 60 and select < 80:
+            elif select > 450 and select < 600:
                 monster = beastiary.create_monster(x, y, self.game_instance,
                                                    beastiary.KOBOLD)
-            elif select > 80 and select < 90:
+            elif select > 600 and select < 700:
                 monster = beastiary.create_monster(x, y, self.game_instance,
                                                    beastiary.DWARF)
+            elif select > 700 and select < 900:
+                monster = beastiary.create_monster(x,y,self.game_instance,
+                                                   beastiary.HOUND)
             else:
                 monster = beastiary.create_monster(x, y, self.game_instance,
                                                   beastiary.TROLL)

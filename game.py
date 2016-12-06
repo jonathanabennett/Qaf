@@ -99,7 +99,7 @@ class Game():
         self.color_palette["dark_floor"] = 3
         self.color_palette["goblinoid"] = 4
         self.color_palette["troll"] = 5
-        self.color_palette['human'] = 6
+        self.color_palette['canine'] = 6
         self.color_palette['elf'] = 7
         self.color_palette['dwarf'] = 8
 

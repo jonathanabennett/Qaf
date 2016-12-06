@@ -18,11 +18,14 @@ ELF = {'st':-1, 'dx':2, 'iq':2, 'ht':0, 'disp':'e', 'color':'elf',
 DWARF = {'st':1, 'dx':-1, 'iq':0, 'ht':1, 'disp':'d', 'color':'dwarf',
          'name':'Dwarf', 'desc':'A Determined Dwarf'}
 
-HUMAN = {'st':0, 'dx':0, 'iq':0, 'ht':0, 'disp':'h', 'color':'human',
+HUMAN = {'st':0, 'dx':0, 'iq':0, 'ht':0, 'disp':'h', 'color':'Player',
          'name':'Human', 'desc': 'A Hubristic Human'}
 
 KOBOLD = {'st':-3, 'dx':4, 'iq':1, 'ht':-1, 'disp':'k', 'color':'goblinoid',
           'name':'Kobold', 'desc': 'A Quick Kobold'}
+
+HOUND = {'st':1, 'dx':8, 'iq':3, 'ht':4, 'disp':'h', 'color':'canine',
+         'name': 'Hound', 'desc': 'A Hungry Hound'}
 
 def create_monster(x,y,game,kind):
     st = randint(8 + kind['st'], 12 + kind['st'])

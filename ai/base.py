@@ -18,7 +18,7 @@ class BaseAI():
 
     def take_turn(self, level):
         tile = level.lookup(self.owner.x, self.owner.y)
-        if tile.value > 10:
+        if tile.value > self.owner.fighter_comp.stats['IQ']:
             return True
 
         if self.state == "Aggressive":
