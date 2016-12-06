@@ -152,7 +152,8 @@ class Fighter():
                 attack_skill = self.skills['Attack']
                 log.debug("I'm learning the basic attack skill.")
         dmg = 0
-        if attack_skill.skill_check(target.fighter_comp.skills['Defense'].level):
+        mod = target.fighter_comp.skills['Defense'].level * -1
+        if attack_skill.skill_check(mod):
             dmg = self.roll_dmg(weapon)
             log.debug("%s did %s damage." % (self.owner.name, dmg))
         return target.get_damaged(self.owner, dmg)
