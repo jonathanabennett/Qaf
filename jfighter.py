@@ -70,8 +70,12 @@ class Skill():
             self.level += 1
             self.points -= self.level
 
+    def get_level(self):
+        return self.owner.stats[self.attribute]*5 + self.level
+
     def __repr__(self):
-        return "%s (%s): %s (%2.4f)" % (self.name, self.attribute, self.level,
+        return "%s (%s): %s (%2.4f)" % (self.name, self.attribute,
+                                        self.get_level(),
                                        self.points)
 
 class Fighter():
@@ -148,7 +152,7 @@ class Fighter():
                 attack_skill = self.skills['Attack']
                 log.debug("I'm learning the basic attack skill.")
         dmg = 0
-        if attack_skill.skill_check(0):
+        if attack_skill.skill_check(target.fighter_comp.skills['Defense'].level):
             dmg = self.roll_dmg(weapon)
             log.debug("%s did %s damage." % (self.owner.name, dmg))
         return target.get_damaged(self.owner, dmg)

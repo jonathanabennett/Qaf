@@ -32,6 +32,8 @@ def create_monster(x,y,game,kind):
     dx = randint(8 + kind['dx'], 12 + kind['dx'])
     iq = randint(8 + kind['iq'], 12 + kind['iq'])
     ht = randint(8 + kind['ht'], 12 + kind['ht'])
+    fighter_comp = Fighter(st, dx, iq, ht)
+    fighter_comp.add_skill("Defense", 'DX', 10, 0, 'defense')
     return Monster(x,y,kind['disp'],kind['color'],kind['name'], kind['desc'],
                    ai_comp=base.BaseAI(), fighter_comp=Fighter(st, dx, iq, ht),
                    game=game)

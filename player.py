@@ -22,6 +22,7 @@ class Player(Monster):
                                                                  'slashing', self,
                                                                  'Longswords')
         self.fighter_comp.add_skill("Longswords", 'ST', 10, 0, 'attack')
+        self.fighter_comp.add_skill("Defense", 'DX', 0, 0, 'defense')
 
     def died(self):
         self.game_instance.save_game(None)
