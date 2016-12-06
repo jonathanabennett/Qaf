@@ -129,13 +129,13 @@ class Fighter():
         attack_skill = None
         weapon = None
         if self.equipped['right hand']:
-            log.debug("I think there is a weapon.")
+            log.debug("%s thinks there is a weapon." % (self.owner.name))
             weapon = self.equipped['right hand']
             try:
                 attack_skill = self.skills[self.equipped['right hand'].skill_name]
-                log.debug("I know how to use it!")
+                log.debug("%s knows how to use it!" % (self.owner.name))
             except:
-                log.debug("I'm learning a new skill.")
+                log.debug("%s is learning a new skill." % (self.owner.name))
                 self.add_skill(self.equipped['right hand'].skillname, 'ST',
                                0, 0, 'attack')
                 attack_skill = self.skills[self.equipped['right hand'].skill_name]
@@ -150,7 +150,7 @@ class Fighter():
         dmg = 0
         if attack_skill.skill_check(0):
             dmg = self.roll_dmg(weapon)
-            log.debug("I did %s damage." % (dmg))
+            log.debug("%s did %s damage." % (self.owner.name, dmg))
         return target.get_damaged(self.owner, dmg)
 
     def roll_dmg(self, weapon):
