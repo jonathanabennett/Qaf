@@ -12,7 +12,7 @@ ORC = {'st':0, 'dx':0, 'iq':-1, 'ht':2, 'disp':'o', 'color':'goblinoid',
 TROLL = {'st':8, 'dx':-3, 'iq':-4, 'ht':2, 'disp':'t', 'color':'troll',
          'name':'Troll', 'desc':'A Terrible Troll'}
 
-ELF = {'st':-1, 'dx':1, 'iq':2, 'ht':0, 'disp':'e', 'color':'elf',
+ELF = {'st':-1, 'dx':2, 'iq':2, 'ht':0, 'disp':'e', 'color':'elf',
        'name':'Elf', 'desc':'An Elegant Elf'}
 
 DWARF = {'st':1, 'dx':-1, 'iq':0, 'ht':1, 'disp':'d', 'color':'dwarf',

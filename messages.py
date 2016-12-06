@@ -57,7 +57,7 @@ class MessageWindow():
             except curses.error: pass
             self.message_list[line].displayed = True
         self.purge_messages()
-        self.window.refresh()
+        self.window.noutrefresh()
         return True
 #        if len(self.message_list) < self.window.getmaxyx()[0]:
 #            for line, message in enumerate(self.message_list):

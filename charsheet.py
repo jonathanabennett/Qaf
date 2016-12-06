@@ -15,4 +15,4 @@ class CharSheet:
             if skill:
                 self.window.addstr(line,1,str(skill))
 
-        self.window.refresh()
+        self.window.noutrefresh()

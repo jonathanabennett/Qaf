@@ -201,7 +201,8 @@ class Game():
         self.msg_handler.update_messages()
         self.char_sheet.update_sheet()
 
-        self.map_view.refresh()
+        self.map_view.noutrefresh()
+        curses.doupdate()
 
     def draw_thing(self, thing, x_offset,y_offset):
         try:
