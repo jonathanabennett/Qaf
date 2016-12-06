@@ -23,23 +23,23 @@ class BaseAI():
 
         if self.state == "Aggressive":
             log.debug("%s is taking turn." % (self.owner.name))
-            adjacents = self.check_neighbors(level)
-            log.debug("%s has %s neighbors." % (self.owner.name,
-                                                len(adjacents)))
-            finished = False
-            while adjacents and not finished:
-                log.debug("Inside decision loop.")
-                dest = adjacents.pop(0)
-                if dest.value == 0:
-                    log.debug("The player! Attack him!")
-                    self.owner.fighter_comp.attack(level.player)
-                    break
-                else:
-                    if not dest.blocked:
-                        log.debug("Checking if Tile %s, %s is closer." % (dest.x,
-                                                                      dest.y))
-                        if dest.value < tile.value:
-                            log.debug("Tile %s, %s is closer!" % (dest.x,
-                                                                  dest.y))
-                            if self.owner.move_to(dest.x, dest.y, level):
-                                finished = True
+            best_x, best_y = self.owner.vector_towards(level.player.x,
+                                                       level.player.y)
+            best_x += self.owner.x
+            best_y += self.owner.y
+            best_tile = level.lookup(best_x, best_y)
+            move = self.owner.move_to(best_x, best_y, level)
+
+            if isinstance(move, float):
+                return move
+            elif move:
+                return True
+            else:
+                adjacents = self.check_neighbors(level)
+                adjacents = [tile for tile in adjacents if not
+                             tile.blocked]
+                while adjacents:
+                    dest = adjacents.pop(0)
+                    if dest.value < tile.value:
+                        if self.owner.move_to(dest.x, dest.y, level):
+                            break

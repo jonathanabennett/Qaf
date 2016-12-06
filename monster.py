@@ -2,6 +2,7 @@ from jfighter import *
 import logging
 from uuid import uuid4
 from tile import Tile
+from math import sqrt
 
 log = logging.getLogger(__name__)
 
@@ -47,6 +48,23 @@ class Monster():
         if not target:
             self.x = x
             self.y = y
+            return True
+        elif isinstance(target, Tile):
+            return False
+        elif target.id == level.player.id:
+            return self.fighter_comp.attack(target)
+        else: return False
+
+
+    def vector_towards(self, target_x, target_y):
+        dx = target_x - self.x
+        dy = target_y - self.y
+        distance = sqrt(dx ** 2 + dy ** 2)
+
+        dx = int(round(dx / distance))
+        dy = int(round(dx / distance))
+
+        return (dx, dy)
 
     def move_or_attack(self,direction, level):
         newX = self.x + DIRECTIONS[direction][0]
@@ -61,7 +79,6 @@ class Monster():
         elif isinstance(target, Tile):
             return "blocked by wall!"
         else:
-            self.fighter_comp.heal(uniform(0.0,0.2))
             return self.fighter_comp.attack(target)
 
     def get_speed(self):
